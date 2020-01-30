@@ -36,6 +36,16 @@
 	</div>
 </div>
 
+<style>
+		body { margin: 0; }
+		canvas { width: 50%; height: 50% }
+</style>
+
 <body>
-   <?php include("js/3dmodel.js");?>
+   <script>
+      <?php include("js/three.js");?>
+   </script>
+   <script id="model_canvas">
+      <?php include("js/3dmodel.js");?>
+   </script>
 </body>
