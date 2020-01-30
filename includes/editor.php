@@ -35,3 +35,7 @@
 	<div class="col-sm-9" id="editor">
 	</div>
 </div>
+
+<body>
+   <?php include("js/3dmodel.js");?>
+</body>
