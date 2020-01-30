@@ -15,4 +15,4 @@ Run these two commands in the base directory for the website (where index.php is
 
 `find . -type f -exec chmod 644 {} \;`
 
-test
+test2
