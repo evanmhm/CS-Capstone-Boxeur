@@ -1,8 +1,11 @@
-<?php include("includes/config.php");?>
 <!DOCTYPE html>
 <html>
 <head>
-	<?php include("includes/head-contents.php");?>
+	<?php
+		$PAGE_TITLE = "Home";
+		include("includes/head-contents.php");
+		var_dump($_SESSION);
+	?>
 </head>
 <body>
 

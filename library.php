@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<?php include("includes/head-contents.php");?>
+	<?php
+		$PAGE_TITLE = "Library";
+		include("includes/head-contents.php");
+	?>
 </head>
 <body>
 

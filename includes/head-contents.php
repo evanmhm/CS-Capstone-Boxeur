@@ -1,9 +1,14 @@
-<title><?php print $PAGE_TITLE;?></title>
+<title><?php print ("Boxeur | " . $PAGE_TITLE);?></title>
 
 <?php if ($CURRENT_PAGE == "Index") { ?>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
-<?php } ?>
+<?php }
+include_once("google_oauth_config.php");
+
+if (!isset($_SESSION)) { session_start(); }
+ini_set('display_errors', 'On')
+?>
 
 <!-- Required meta tags -->
 <meta charset="utf-8">
@@ -11,18 +16,9 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="css/main.css" type="text/css">
 <link rel="stylesheet" href="css/editor.css" type="text/css">
 <script src="js/main.js"></script>
-
-<style>
-	#main-content {
-		margin-top:20px;
-	}
-	.footer {
-		font-size: 14px;
-		text-align: center;
-	}
-</style>

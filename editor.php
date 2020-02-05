@@ -2,7 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<?php include("includes/head-contents.php");?>
+	<?php
+		$PAGE_TITLE = "Editor";
+		include("includes/head-contents.php");
+		var_dump($_SESSION);
+	?>
 </head>
 <body>
 
