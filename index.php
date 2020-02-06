@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<?php
 		$PAGE_TITLE = "Home";
@@ -7,13 +8,15 @@
 		var_dump($_SESSION);
 	?>
 </head>
+
 <body>
 
-<?php include("includes/nav.php");?>
+	<?php include("includes/nav.php");?>
 
-<?php include("includes/home.php");?>
+	<?php include("includes/home.php");?>
 
-<?php include("includes/footer.php");?>
+	<?php include("includes/footer.php");?>
 
 </body>
+
 </html>

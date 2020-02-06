@@ -1,4 +1,3 @@
-
 <div class="text-center">
     <h1>boxeur</h1>
     <p>this is some info about what the site is and how to use it</p>

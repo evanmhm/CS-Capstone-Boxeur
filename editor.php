@@ -1,6 +1,7 @@
 <?php include("includes/config.php");?>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<?php
 		$PAGE_TITLE = "Editor";
@@ -8,13 +9,15 @@
 		var_dump($_SESSION);
 	?>
 </head>
+
 <body>
 
-<?php include("includes/nav.php");?>
+	<?php include("includes/nav.php");?>
 
-<?php include("includes/editor.php");?>
+	<?php include("includes/editor.php");?>
 
-<?php include("includes/footer.php");?>
+	<?php include("includes/footer.php");?>
 
 </body>
+
 </html>

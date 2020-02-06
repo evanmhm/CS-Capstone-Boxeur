@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<?php
         ob_start();
@@ -10,12 +11,15 @@
         }
 	?>
 </head>
+
 <body>
 	<?php include("includes/nav.php");?>
 	<div class="container">
 		<div class="card">
 			<div class="card-body">
-				<h2 class="card-title"><?php echo $_SESSION['userData']['given_name']; ?></h2>
+				<h2 class="card-title">
+					<?php echo $_SESSION['userData']['given_name']; ?>
+				</h2>
 				<p> way to edit name and account info, and delete account</p>
 			</div>
 		</div>
@@ -23,4 +27,5 @@
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
 	<?php include("includes/footer.php");?>
 </body>
+
 </html>
