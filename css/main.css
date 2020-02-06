@@ -11,7 +11,9 @@ nav {
 #account, #log-out {
     height: 100%;
 }
-
+#log-out {
+    margin-top: 4px;
+}
 #log-out:hover {
     cursor: pointer;
 }

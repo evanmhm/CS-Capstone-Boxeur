@@ -6,10 +6,10 @@
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <?php }
-include_once("google_oauth_config.php");
+ini_set('display_errors', 'On');
+include_once("includes/google_oauth_config.php");
 
 if (!isset($_SESSION)) { session_start(); }
-ini_set('display_errors', 'On')
 ?>
 
 <!-- Required meta tags -->

@@ -1,3 +1,4 @@
+<?php include("includes/config.php");?>
 <!DOCTYPE html>
 <html>
 
@@ -18,7 +19,7 @@
 		<div class="card">
 			<div class="card-body">
 				<h2 class="card-title">
-					<?php echo $_SESSION['userData']['given_name']; ?>
+					<?php echo $_SESSION['account']['first_name'];?>
 				</h2>
 				<p> way to edit name and account info, and delete account</p>
 			</div>

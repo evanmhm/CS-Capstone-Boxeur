@@ -1,10 +1,11 @@
+<?php include("includes/config.php");?>
 <!DOCTYPE html>
 <html>
 
 <head>
 	<?php
 		$PAGE_TITLE = "Home";
-		include("includes/head-contents.php");
+		include_once("includes/head-contents.php");
 		var_dump($_SESSION);
 	?>
 </head>

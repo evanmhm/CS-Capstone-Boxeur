@@ -16,9 +16,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="library.php">Library</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="login.php">Log In</a>
-            </li>
+            <?php if (!isset($_SESSION['access_token']) || !$_SESSION['access_token']): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php">Log In</a>
+                </li>
+            <?php endif;?>
         </ul>
 
         <!-- if user is signed in... -->
