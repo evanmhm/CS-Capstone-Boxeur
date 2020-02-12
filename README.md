@@ -14,9 +14,3 @@ Run these two commands in the base directory for the website (where index.php is
 `find . -type d -exec chmod 755 {} \;`
 
 `find . -type f -exec chmod 644 {} \;`
-
-<<<<<<< Updated upstream
-test2
-=======
-test
->>>>>>> Stashed changes
