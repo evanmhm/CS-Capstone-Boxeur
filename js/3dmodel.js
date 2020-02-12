@@ -1,16 +1,19 @@
 var camera, scene, renderer;
 var geometry, material, mesh;
+var controls;
 
 init();
 animate();
 
 function init() {
 
-	camera = new THREE.OrthographicCamera(innerWidth / - 2, innerWidth / 2, innerHeight / 2, innerHeight / - 2, 1, 1000 );
+	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
+
+	camera = new THREE.OrthographicCamera( canvasDims.width / - 2, canvasDims.width / 2, canvasDims.height / 2, canvasDims.height / - 2, 1, 1000 );
 	camera.position.z = 1;
 
 	scene = new THREE.Scene();
-	scene.add(camera);
+	scene.background = new THREE.Color(0xffffff);
 
 	geometry = new THREE.BoxGeometry( 0.2, 0.2, 0.2 );
 	material = new THREE.MeshNormalMaterial();
@@ -18,14 +21,15 @@ function init() {
 	mesh = new THREE.Mesh( geometry, material );
 	scene.add( mesh );
 
-	renderer = new THREE.WebGLRenderer( { antialias: true } );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.body.appendChild( renderer.domElement );
+	renderer = new THREE.WebGLRenderer( { antialias: true, canvas: model_canvas } );
+
+	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 
 }
 
 function animate() {
 
+	controls.update();
 	requestAnimationFrame( animate );
 
 	mesh.rotation.x += 0.01;

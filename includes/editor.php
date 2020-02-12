@@ -33,15 +33,16 @@
         </div>
 	</div>
 	<div class="col-sm-9" id="editor">
-      
+      <canvas id="model_canvas">
+      </canvas>
+      <script>
+         <?php include("./threejs/build/three.js");?>
+         <?php include("./threejs/examples/js/controls/OrbitControls.js");?>
+         <?php include("js/3dmodel.js");?>
+      </script>
 	</div>
 </div>
 
 <body>
-   <script>
-      <?php include("./vendor/components/three.js/three.js");?>
-   </script>
-   <script id="model_canvas">
-      <?php include("js/3dmodel.js");?>
-   </script>
+   
 </body>
