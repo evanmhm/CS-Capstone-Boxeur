@@ -19,6 +19,7 @@ hr {
 }
 
 #sidebar {
+    display: inline-block;
     z-index: 10;
     background-color: #fff;
     padding-right: 0;
@@ -28,6 +29,11 @@ hr {
 
 #editor {
     /* background-color: green; */
+    display: inline-block;
+}
+
+canvas {
+    display: inline-block;
 }
 
 #modes,

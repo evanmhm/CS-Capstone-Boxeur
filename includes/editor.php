@@ -33,17 +33,13 @@
         </div>
 	</div>
 	<div class="col-sm-9" id="editor">
+      
 	</div>
 </div>
 
-<style>
-		body { margin: 0; }
-		canvas { width: 50%; height: 50% }
-</style>
-
 <body>
    <script>
-      <?php include("js/three.js");?>
+      <?php include("./vendor/components/three.js/three.js");?>
    </script>
    <script id="model_canvas">
       <?php include("js/3dmodel.js");?>

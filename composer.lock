@@ -1,0 +1,81 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "dd1707b6406dd6ee2a6781b84f81e164",
+    "packages": [
+        {
+            "name": "components/three.js",
+            "version": "0.0.79",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/three.js.git",
+                "reference": "38d3270f7f36adb9259ee7c358db80ac41459987"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/three.js/zipball/38d3270f7f36adb9259ee7c358db80ac41459987",
+                "reference": "38d3270f7f36adb9259ee7c358db80ac41459987",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "name": "threejs",
+                    "scripts": [
+                        "three.js"
+                    ],
+                    "files": [
+                        "three.js"
+                    ],
+                    "shim": {
+                        "exports": "THREE"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mrdoob",
+                    "homepage": "https://github.com/mrdoob"
+                },
+                {
+                    "name": "alteredq",
+                    "homepage": "https://github.com/alteredq"
+                },
+                {
+                    "name": "bhouston",
+                    "homepage": "https://github.com/bhouston"
+                },
+                {
+                    "name": "zz85",
+                    "homepage": "https://github.com/zz85"
+                },
+                {
+                    "name": "gero3",
+                    "homepage": "https://github.com/gero3"
+                },
+                {
+                    "name": "sole",
+                    "homepage": "https://github.com/sole"
+                }
+            ],
+            "description": "ThreeJS JavaScript 3D library",
+            "homepage": "http://threejs.org/",
+            "time": "2016-07-28T16:04:55+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
