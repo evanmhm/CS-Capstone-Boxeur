@@ -6,8 +6,9 @@
 	<?php
 		$PAGE_TITLE = "Editor";
 		include("includes/head-contents.php");
-		var_dump($_SESSION);
+		// var_dump($_SESSION);
 	?>
+	<script src="js/editor.js" charset="utf-8" defer></script>
 </head>
 
 <body>

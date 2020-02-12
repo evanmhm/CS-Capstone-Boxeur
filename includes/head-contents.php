@@ -2,10 +2,7 @@
 	<?php print ("Boxeur | " . $PAGE_TITLE);?>
 </title>
 
-<?php if ($CURRENT_PAGE == "Index") { ?>
-<meta name="description" content="" />
-<meta name="keywords" content="" />
-<?php }
+<?php
 ini_set('display_errors', 'On');
 include_once("includes/google_oauth_config.php");
 

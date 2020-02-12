@@ -6,7 +6,7 @@
 	<?php
 		$PAGE_TITLE = "Home";
 		include_once("includes/head-contents.php");
-		var_dump($_SESSION);
+		// var_dump($_SESSION);
 	?>
 </head>
 
