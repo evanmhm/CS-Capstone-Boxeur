@@ -27,10 +27,6 @@ hr {
     box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
-#editor {
-    /* background-color: green; */
-}
-
 canvas{
     width: 100%;
     height: 100%;
