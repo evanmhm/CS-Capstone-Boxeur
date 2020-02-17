@@ -33,6 +33,30 @@ canvas{
     flex-grow: 1;
 }
 
+#container {
+    position: relative;
+}
+
+#dimension-options,
+#edge-type-options,
+#holes-options {
+    position: absolute;
+    left: 30px;
+}
+
+/* edgeTypeId will be on top of dimensionId */
+#dimension-options {
+    z-index: 1;
+}
+
+#edge-type-options {
+    z-index: 2;
+}
+
+#holes-options {
+    z-index: 3;
+}
+
 #modes,
 #modes ul,
 #modes ul li,
@@ -60,7 +84,7 @@ canvas{
 #modes ul li:hover {
     position: relative;
     z-index: 599;
-    cursor: default;
+    cursor: pointer;
 }
 
 #modes ul ul {
@@ -125,7 +149,8 @@ canvas{
     padding: 10px 20px;
 }
 
-#modes>ul>li:hover {
+#modes>ul>li:hover,
+#modes>ul>li.active {
     border-left: 3px solid #3dbd99;
 }
 
