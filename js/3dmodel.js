@@ -3,6 +3,7 @@ var geometry, material, mesh;
 var controls;
 
 var frustumSize = 600;
+var canvas = document.getElementById("model_canvas").getContext("webgl");
 var canvasDims = document.getElementById("model_canvas").getBoundingClientRect();;
 var width = canvasDims.width;
 var height = canvasDims.height;
@@ -17,7 +18,8 @@ function init() {
 	scene.background = new THREE.Color(0xffffff);
 
 	camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
-
+	//camera = new THREE.PerspectiveCamera( 50, 0.5 * aspect, 1, 1000 );
+	
 	camera.position.z = 5;
 
 	scene.add(camera);
@@ -33,7 +35,7 @@ function init() {
 
 	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 
-	window.addEventListener( 'resize', onWindowResize, false );
+	//window.addEventListener( 'resize', onWindowResize, false );
 }
 
 function animate() {
@@ -41,8 +43,8 @@ function animate() {
 	controls.update();
 	requestAnimationFrame( animate );
 
-	mesh.rotation.x += 0.01;
-	mesh.rotation.y += 0.02;
+	//mesh.rotation.x += 0.01;
+	//	mesh.rotation.y += 0.02;
 
 	renderer.render( scene, camera );
 
