@@ -58,16 +58,9 @@
         </div>
 	</div>
 	<div class="col-sm-9" id="editor">
-      <canvas id="model_canvas">
-      </canvas>
-      <script>
-         <?php include("./threejs/build/three.js");?>
-         <?php include("./threejs/examples/js/controls/OrbitControls.js");?>
-         <?php include("js/3dmodel.js");?>
-      </script>
+        	<canvas id="model_canvas"></canvas>
 	</div>
 </div>
-
-<body>
-   
-</body>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/3dmodel.js"></script>
