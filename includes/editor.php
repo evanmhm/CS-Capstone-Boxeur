@@ -23,24 +23,32 @@
         <div id="contaner">
             <div id="dimension-options" class="visible">
                 <!-- this will change based on the mode selected above -->
-                <form>
+                
                     <label for="width">Width</label>
-                    <input type="text" name="width" value="">
+                    <input type="range" name="width" min="1" max="100" value="50" id="width">
 
                     <br>
                     <label for="height">Height</label>
-                    <input type="text" name="height" value="">
-                </form>
+                    <input type="range" name="height" min="1" max="100" value="50" id="height">
+
+                    <br>
+                    <label for="depth">Depth</label>
+                    <input type="range" name="depth" min="1" max="100" value="50" id="depth">
+                
             </div>
             <div id="edge-type-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
                 <form>
-                    <label for="edge">edge</label>
-                    <input type="text" name="edge" value="">
+                    <label for="edge">Edge</label>
+                    <select name="edge">
+                        <option value="flat">Flat</option>
+                        <option value="finger">Finger</option>
+                        <option value="t-slot">T-Slot</option>
+                    </select>
 
                     <br>
-                    <label for="edgelength">edgeLength</label>
-                    <input type="text" name="edgeLength" value="">
+                    <label for="edgelength">Edge Length</label>
+                    <input type="range" name="edgeLength" min="1" max="100" value="50" id="edgelength">
                 </form>
             </div>
             <div id="holes-options" class="invisible">

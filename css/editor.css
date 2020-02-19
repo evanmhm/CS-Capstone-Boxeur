@@ -28,6 +28,7 @@ hr {
 }
 #editor {
     padding: 0;
+    display: flex;
 }
 canvas{
     width: 100%;
@@ -37,6 +38,7 @@ canvas{
 
 #container {
     position: relative;
+    display: flex;
 }
 
 #dimension-options,
