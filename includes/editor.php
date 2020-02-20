@@ -61,6 +61,12 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select>
+                    <button type="button" id="front">Front</button>
+                    <button type="button" id="top">Top</button>
+                    <button type="button" id="right">Right</button>
+                    <button type="button" id="left">Left</button>
+                    <button type="button" id="bottom">Bottom</button>
+                    <button type="button" id="back">Back</button>
                 </form>
             </div>
         </div>

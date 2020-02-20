@@ -2,6 +2,7 @@ var camera, scene, renderer;
 var geometry, material, mesh;
 var controls;
 
+
 var lastWidth = 50, lastDepth = 50, lastHeight = 50;
 var formWidth, formDepth, formHeight;
 
@@ -18,6 +19,8 @@ document.getElementById("width").addEventListener('input', updateGeometry);
 document.getElementById("height").addEventListener('input', updateGeometry);
 document.getElementById("depth").addEventListener('input', updateGeometry);
 
+document.getElementById("holes-options").addEventListener('click', holesScreen);
+
 animate();
 
 function init() {
@@ -28,7 +31,9 @@ function init() {
 	//camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
 	camera = new THREE.PerspectiveCamera( 50, 0.5 * aspect, 1, 1000 );
 	
-	camera.position.z = 200;
+	camera.position.x = 120;
+	camera.position.y = 120;
+	camera.position.z = 120;
 
 	scene.add(camera);
 
@@ -79,11 +84,7 @@ function init() {
 	renderer.setSize(width, height, false);
 
 	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
-
 	
-//	document.
-
-	//window.addEventListener( 'resize', onWindowResize, false );
 }
 
 function updateGeometry(){
@@ -112,6 +113,12 @@ function updateGeometry(){
 
 	geometry.verticesNeedUpdate = true;
 	geometry.normalsNeedUpdate = true;
+
+}
+
+function holesScreen(){
+
+	controls.enabled = false;
 
 }
 
