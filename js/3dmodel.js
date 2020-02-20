@@ -2,6 +2,9 @@ var camera, scene, renderer;
 var geometry, material, mesh;
 var controls;
 
+var lastWidth = 50, lastDepth = 50, lastHeight = 50;
+var formWidth, formDepth, formHeight;
+
 var frustumSize = 600;
 var canvas = document.getElementById("model_canvas").getContext("webgl");
 var canvasDims = document.getElementById("model_canvas").getBoundingClientRect();;
@@ -85,11 +88,15 @@ function init() {
 
 function updateGeometry(){
 
-	var formWidth = document.getElementById("width").value;
-	var formHeight = document.getElementById("height").value;
-	var formDepth = document.getElementById("depth").value;
+	formWidth = document.getElementById("width").value;
+	formHeight = document.getElementById("height").value;
+	formDepth = document.getElementById("depth").value;
 
-	geometry.vertices[0] = THREE.Vector3(-(formWidth / 2), -(formHeight / 2), (formDepth / 2));
+	//console.log(formWidth/lastWidth)
+
+	geometry.scale(formWidth/lastWidth, formHeight/lastHeight, formDepth/lastDepth);
+
+	/*geometry.vertices[0] = THREE.Vector3(-(formWidth / 2), -(formHeight / 2), (formDepth / 2));
 	geometry.vertices[1] = THREE.Vector3((formWidth / 2), -(formHeight / 2), (formDepth / 2));
 	geometry.vertices[2] = THREE.Vector3(-(formWidth / 2), (formHeight / 2), (formDepth / 2));
 	geometry.vertices[3] = THREE.Vector3((formWidth / 2), (formHeight / 2), (formDepth / 2));
@@ -97,7 +104,11 @@ function updateGeometry(){
 	geometry.vertices[5] = THREE.Vector3((formWidth / 2), -(formHeight / 2), -(formDepth / 2));
 	geometry.vertices[6] = THREE.Vector3(-(formWidth / 2), (formHeight / 2), -(formDepth / 2));
 	geometry.vertices[7] = THREE.Vector3((formWidth / 2), (formHeight / 2), -(formDepth / 2));
+*/
 
+	lastWidth = formWidth;
+	lastHeight = formHeight;
+	lastDepth = formDepth;
 
 	geometry.verticesNeedUpdate = true;
 	geometry.normalsNeedUpdate = true;
