@@ -22,7 +22,6 @@ hr {
     z-index: 10;
     background-color: #fff;
     padding-right: 0;
-    padding-top: 15px;
     box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
@@ -30,15 +29,9 @@ hr {
     /* background-color: green; */
 }
 
-#container {
+#options {
     position: relative;
-}
-
-#dimension-options,
-#edge-type-options,
-#holes-options {
-    position: absolute;
-    left: 30px;
+    padding: 0 6%;
 }
 
 /* edgeTypeId will be on top of dimensionId */

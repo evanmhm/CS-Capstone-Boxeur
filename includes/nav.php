@@ -4,7 +4,6 @@
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -13,9 +12,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="editor.php">Editor</a>
             </li>
+            <?php if (isset($_SESSION['access_token']) && $_SESSION['access_token']): ?>
             <li class="nav-item">
                 <a class="nav-link" href="library.php">Library</a>
             </li>
+            <?php endif;?>
             <?php if (!isset($_SESSION['access_token']) || !$_SESSION['access_token']): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="login.php">Log In</a>
