@@ -11,8 +11,9 @@
 </style>
 
 <body>
-<?php include("includes/library-nav.php");?>
-
+//<?php include("includes/library-nav.php");?>
+background-color: #23272A;
+	
 <div class="container">
     <h1><center><font color ="white">Library</font></center></h1>
 
