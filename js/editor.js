@@ -17,7 +17,7 @@ if (clickDimension) {
         camera.position.y = 120;
         camera.position.z = 120;
         scene.remove(grid);
-        document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
+        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -39,7 +39,7 @@ if (clickEdge) {
         camera.position.y = 120;
         camera.position.z = 120;
         scene.remove(grid);
-        document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
+        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -57,6 +57,6 @@ if (clickHoles) {
         }
         clickHoles.parentElement.className = "active";
         controls.enabled = false;
-        document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
+        document.getElementById("editor").addEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }

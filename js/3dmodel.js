@@ -2,9 +2,13 @@ var camera, scene, renderer;
 var geometry, material, mesh;
 var controls;
 var grid;
-var holesList = [];
+var raycaster, holeGeometry, holeMaterial, holeMesh;
 
-var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE OBJECT  !!!!!!!!!!!//
+var holesList = []; //Hole list for saving the box
+
+var mouse = new THREE.Vector2();
+
+var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX  !!!!!!!!!!!//
 var formWidth, formDepth, formHeight;
 
 var frustumSize = 600;
@@ -46,6 +50,8 @@ function init() {
 	scene.add(camera);
 
 	setUpGeometry();
+
+	scene.add( mesh );
 
 	renderer = new THREE.WebGLRenderer( { antialias: true, canvas: model_canvas } );
 	renderer.setSize(width, height, false);
@@ -123,28 +129,22 @@ function gridPlacer(face){
 	scene.add(grid);
 }
 
-function onCanvasMouseMove(){
-	
+function onCanvasMouseMove(event){
+
+	event.preventDefault();
+
+	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
 }
 
 //Tried a thousand different methods to resize the canvas with a window resize, but nothing seems to work.
+//Edit: Suddenly it works. Weird.
 function onWindowResize(){
 
-	//let newWidth = document.getElementById("editor").width;
-	//let newHeight = document.getElementById("editor").height;
 	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
 	width = canvasDims.width;
 	height = canvasDims.height;
-	//aspect = newWidth/newHeight; 
-	/*width = canvas.clientWidth;
-	height = canvas.clientHeight;
-
-	var styles = getComputedStyle(document.getElementById("editor")),
-    w = parseInt(styles.getPropertyValue("width"), 10),
-    h = parseInt(styles.getPropertyValue("height"), 10);
-
-	canvas.width = w;
-	canvas.height = h;*/
 
 	aspect = width / height;
 
@@ -152,17 +152,14 @@ function onWindowResize(){
 		renderer.setSize(width, height, false);
 		camera.aspect = aspect;
 	}
-	/*	camera.left = - width / 2;
-		camera.right = width / 2;
-		camera.top = height / 2;
-		camera.bottom = - height / 2;
-	*/
 
 		camera.updateProjectionMatrix();
 
 }
 
 function setUpGeometry(){
+
+	//Box Geometry
 	geometry = new THREE.Geometry();
 
 	geometry.vertices.push(
@@ -221,7 +218,7 @@ function setUpGeometry(){
 	material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors });
 
 	mesh = new THREE.Mesh( geometry, material );
-	scene.add( mesh );
+
 }
 
 
