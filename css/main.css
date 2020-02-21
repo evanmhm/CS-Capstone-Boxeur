@@ -133,6 +133,11 @@ nav {
     margin-left: -1%;
 }
 
+#main-card {
+    /* width: 80%; */
+    margin-top: 50px;
+}
+
 #slider {
     background-color: #23272A;
     width: 100%;

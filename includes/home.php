@@ -10,6 +10,9 @@
                 To save your projects online you can log in with a google account.
                 To export the project, go to the Project tab in the editor and press export.
             </p>
+            <a class="btn btn-primary" href="login.php">
+                Login / Sign up
+            </a>
         </div>
         <img src="img/a5.png" />
     </div>
