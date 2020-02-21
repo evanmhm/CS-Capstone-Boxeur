@@ -1,10 +1,29 @@
+var clickProjcet = document.getElementById("project");
+console.log(clickProjcet);
+if (clickProjcet) {
+	clickProjcet.addEventListener('click', function() {
+		document.getElementById("project-options").className = "d-block";
+		document.getElementById("dimension-options").className = "d-none";
+		document.getElementById("edge-type-options").className = "d-none";
+		document.getElementById("holes-options").className = "d-none";
+        var children = clickProjcet.parentElement.parentElement.children;
+        var i;
+        for (i = 0; i < children.length; i++) {
+            children[i].classList.remove("active");
+        }
+
+        clickProjcet.parentElement.className = "active";
+	});
+}
+
 var clickDimension = document.getElementById("dimension");
 console.log(clickDimension);
 if (clickDimension) {
 	clickDimension.addEventListener('click', function() {
-		document.getElementById("dimension-options").className = "visible";
-		document.getElementById("edge-type-options").className = "invisible";
-		document.getElementById("holes-options").className = "invisible";
+		document.getElementById("project-options").className = "d-none";
+		document.getElementById("dimension-options").className = "d-block";
+		document.getElementById("edge-type-options").className = "d-none";
+		document.getElementById("holes-options").className = "d-none";
         var children = clickDimension.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -25,9 +44,10 @@ var clickEdge = document.getElementById("edge-type");
 console.log(clickEdge);
 if (clickEdge) {
 	clickEdge.addEventListener('click', function() {
-		document.getElementById("dimension-options").className = "invisible";
-		document.getElementById("edge-type-options").className = "visible";
-		document.getElementById("holes-options").className = "invisible";
+		document.getElementById("project-options").className = "d-none";
+		document.getElementById("dimension-options").className = "d-none";
+		document.getElementById("edge-type-options").className = "d-block";
+		document.getElementById("holes-options").className = "d-none";
         var children = clickDimension.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -47,9 +67,10 @@ var clickHoles = document.getElementById("holes");
 console.log(clickHoles);
 if (clickHoles) {
 	clickHoles.addEventListener('click', function() {
-		document.getElementById("dimension-options").className = "invisible";
-		document.getElementById("edge-type-options").className = "invisible";
-		document.getElementById("holes-options").className = "visible";
+		document.getElementById("project-options").className = "d-none";
+		document.getElementById("dimension-options").className = "d-none";
+		document.getElementById("edge-type-options").className = "d-none";
+		document.getElementById("holes-options").className = "d-block";
         var children = clickDimension.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -60,3 +81,18 @@ if (clickHoles) {
         document.getElementById("editor").addEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
+
+$("#holes-options form").on("input", function() {
+	if (document.getElementById('rect').checked) {
+		document.getElementById("shape-width-label").innerHTML = "Rectangle width";
+		document.getElementById("shape-height-label").innerHTML = "Rectangle height";
+		document.getElementById("shape-height-group").style.display = "block";
+	} else if (document.getElementById('triangle').checked) {
+		document.getElementById("shape-width-label").innerHTML = "Triangle base";
+		document.getElementById("shape-height-label").innerHTML = "Triangle height";
+		document.getElementById("shape-height-group").style.display = "block";
+	} else if (document.getElementById('circle').checked) {
+		document.getElementById("shape-width-label").innerHTML = "Circle diameter";
+		document.getElementById("shape-height-group").style.display = "none";
+	}
+});
