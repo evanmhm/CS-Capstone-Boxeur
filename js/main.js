@@ -1,1 +1,2 @@
-// site-wide js
+
+console.log("js is loaded")

@@ -7,14 +7,19 @@
 		$PAGE_TITLE = "Login";
 		include("includes/head-contents.php");
 	?>
+	<style>
+		body {
+			background-color: #23272A;
+		}
+	</style>
 </head>
 
 <body>
 	<?php include("includes/nav.php");?>
 	<div class="container">
-		<div class="card">
+		<div class="card" id="main-card">
 			<div class="card-body">
-				<h2 class="card-title">Log in with Google</h2>
+				<h2 class="card-title">Log in / Sign up</h2>
 				<?php if (isset($googleAuthUrl)): ?>
 				<a href="<?php echo $googleAuthUrl; ?>">
 					<div class="google-btn">
