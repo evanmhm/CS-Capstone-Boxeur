@@ -1,87 +1,17 @@
-<?php include("includes/config.php");?>
-<!DOCTYPE html>
-<html>
-<head>
-  <?php include("includes/head-contents.php");?>
-
-</head>
-
-<body>
-<div class="text-center">
-    <h1>boxeur</h1>
-    <p>intro to this website</p>
-    <p>bla bla bla bla</p>
-
-</div>
-
-<div class="container">
-
-    <div class="row">
-        <div class="boxExample">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="..." alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title"> Box Example </h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="editor.php" class="btn btn-primary">Clean project</a>
-              </div>
-            </div>
+<div id="slider">
+    <div class="slider-inner">
+        <div id="slider-content">
+            <div class="meta"></div>
+            <h2 id="slide-title">Boxeur</h2>
+            <h4>A 3D Case Designer</h4>
+            <div class="meta">How to use it</div>
+            <p style="color:white;">
+                Head over to the editor tab to make a case.
+                To save your projects online you can log in with a google account.
+                To export the project, go to the Project tab in the editor and press export.
+            </p>
         </div>
-        <div class="boxExample">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="..." alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Box Example</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-        </div>
-        <div class="boxExample">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="..." alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Box Example</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-        </div>
-
-        <div class="boxExample">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="..." alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Box Example</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-        </div>
-        <div class="boxExample">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="..." alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Box Example</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-        </div>
-        <div class="boxExample">
-            <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="..." alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Box Example</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-        </div>
+        <img src="img/a5.png" />
     </div>
+
 </div>
-
-<?php include("includes/footer.php");?>
-
-</body>
-</html>
