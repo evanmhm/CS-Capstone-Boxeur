@@ -16,7 +16,7 @@
 </style>
 
 <body>
-	<?php include("includes/nav.php");?>
+	<?php include("includes/library-nav.php");?>
 
 <div class="container">
     <h1><center><font color ="white">Library</font></center></h1>
