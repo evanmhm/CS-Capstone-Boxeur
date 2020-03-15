@@ -3,6 +3,7 @@ var geometry, material, mesh;
 var controls;
 var grid;
 var raycaster, holeGeometry, holeMaterial, holeMesh;
+var testHole;
 
 var holesList = []; //Hole list for saving the box
 
@@ -26,12 +27,12 @@ document.getElementById("height").addEventListener('input', updateGeometry, fals
 document.getElementById("depth").addEventListener('input', updateGeometry,false);
 
 //Set listeners for what side to look at during hole placement
-document.getElementById("front").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 0; camera.position.z = 120; gridPlacer(e.target.id);}, false);
-document.getElementById("back").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 0; camera.position.z = -120; gridPlacer(e.target.id);}, false);
-document.getElementById("top").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 120; camera.position.z = 0; gridPlacer(e.target.id);}, false);
-document.getElementById("bottom").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = -120; camera.position.z = 0; gridPlacer(e.target.id);}, false);
-document.getElementById("right").addEventListener('click', function(e){camera.position.x = 120; camera.position.y = 0; camera.position.z = 0; gridPlacer(e.target.id);}, false);
-document.getElementById("left").addEventListener('click', function(e){camera.position.x = -120; camera.position.y = 0; camera.position.z = 0; gridPlacer(e.target.id);}, false);
+document.getElementById("front").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 0; camera.position.z = 51; gridPlacer(e.target.id); document.getElementById("model_canvas").addEventListener('click', helper, false);}, false);
+document.getElementById("back").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 0; camera.position.z = -51; gridPlacer(e.target.id);}, false);
+document.getElementById("top").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 51; camera.position.z = 0; gridPlacer(e.target.id);}, false);
+document.getElementById("bottom").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = -51; camera.position.z = 0; gridPlacer(e.target.id);}, false);
+document.getElementById("right").addEventListener('click', function(e){camera.position.x = 51; camera.position.y = 0; camera.position.z = 0; gridPlacer(e.target.id);}, false);
+document.getElementById("left").addEventListener('click', function(e){camera.position.x = -51; camera.position.y = 0; camera.position.z = 0; gridPlacer(e.target.id);}, false);
 
 animate();
 
@@ -40,18 +41,26 @@ function init() {
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xffffff);
 
-	//camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
-	camera = new THREE.PerspectiveCamera( 50, 0.5 * aspect, 1, 1000 );
+	camera = new THREE.OrthographicCamera( 0.3 * width / - 2, 0.3 * width / 2, 0.3 * height / 2, 0.3 * height / - 2, 1, 1000 );
 	
-	camera.position.x = 120;
-	camera.position.y = 120;
-	camera.position.z = 120;
+	camera.position.x = 51;
+	camera.position.y = 51;
+	camera.position.z = 51;
 
 	scene.add(camera);
 
 	setUpGeometry();
 
 	scene.add( mesh );
+	
+	holeGeometry = new THREE.PlaneGeometry(5, 5);
+	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
+	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
+	testHole = new THREE.Mesh(holeGeometry, holeMaterial);
+	scene.add(holeMesh);
+
+	raycaster = new THREE.Raycaster();
+	raycaster.linePrecision = 3;
 
 	renderer = new THREE.WebGLRenderer( { antialias: true, canvas: model_canvas } );
 	renderer.setSize(width, height, false);
@@ -66,8 +75,54 @@ function animate() {
 	controls.update();
 	requestAnimationFrame( animate );
 
-	renderer.render( scene, camera );
+	render();
 
+}
+
+function render(){
+
+	if(scene.getObjectByName('grid') != null){
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObject( grid );
+
+		if ( intersects.length > 0 ) {
+
+			holeMesh.visible = true;
+			holeMesh.position.copy( intersects[0].point );
+
+		} else {
+
+			holeMesh.visible = false;
+
+		}
+	} else {
+
+		holeMesh.visible = false;
+
+	}
+
+	renderer.render( scene, camera );
+}
+
+function helper(){
+
+	if(scene.getObjectByName('grid') != null){
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObject( grid );
+
+		if ( intersects.length > 0 ) {
+
+			var intpoint = intersects[0].point;
+
+			scene.add(testHole);
+			testHole.translateX(intpoint.x);
+			testHole.translateY(intpoint.y);
+			testHole.translateZ(intpoint.z);
+
+		} 
+	}
 }
 
 //Change box geometry based on form values when a slider is being input
@@ -96,46 +151,49 @@ function gridPlacer(face){
 	
 	switch(face){
 		case "front": 
-			grid = new THREE.GridHelper(lastWidth, lastWidth/2);
-			grid.translateZ(lastDepth-1);
+			grid = new THREE.GridHelper(lastWidth, 10);
+			grid.translateZ(lastDepth/2);
 			grid.rotateX(Math.PI/2);
 			break;
 		case "back":
 			grid = new THREE.GridHelper(lastWidth, lastWidth/2);
-			grid.translateZ(-lastDepth+1);
+			grid.translateZ(-lastDepth/2);
 			grid.rotateX(Math.PI/2);
 			break;
 		case "top":
 			grid = new THREE.GridHelper(lastHeight, lastHeight/2);
-			grid.translateY(lastHeight);
+			grid.translateY(lastHeight/2);
 			break;
 		case "bottom":
 			grid = new THREE.GridHelper(lastHeight, lastHeight/2);
-			grid.translateY(-lastHeight);
+			grid.translateY(-lastHeight/2);
 			break;
 		case "right":
 			grid = new THREE.GridHelper(lastDepth, lastDepth/2);
-			grid.translateX(lastWidth);
+			grid.translateX(lastWidth/2);
 			grid.rotateZ(Math.PI/2);
 			break;
 		case "left":
 			grid = new THREE.GridHelper(lastDepth, lastDepth/2);
-			grid.translateX(-lastWidth);
+			grid.translateX(-lastWidth/2);
 			grid.rotateZ(Math.PI/2);
 			break;
 	}
 
 	grid.name = "grid";
 	scene.add(grid);
+	
+	document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
 }
 
 function onCanvasMouseMove(event){
 
 	event.preventDefault();
 
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.x = ( event.clientX / (window.innerWidth +375) ) * 2 - 1;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
+	console.log(mouse);
 }
 
 //Tried a thousand different methods to resize the canvas with a window resize, but nothing seems to work.
