@@ -56,24 +56,18 @@
             </div>
             <div id="dimension-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
-                <form>
-                    <div class="form-group">
-                        <label for="width">Width</label>
-                        <input class="form-control" type="number" min="0"name="width" aria-describedby="width" placeholder="Enter width">
-                    </div>
-                    <div class="form-group">
-                        <label for="height">Height</label>
-                        <input class="form-control" type="number" min="0" name="height" aria-describedby="height" placeholder="Enter height">
-                    </div>
-                    <div class="form-group">
-                        <label for="length">Length</label>
-                        <input class="form-control" type="number" min="0" name="length" aria-describedby="length" placeholder="Enter length">
-                    </div>
-                    <div class="form-group">
-                        <label for="thickness">Thickness</label>
-                        <input class="form-control" type="number" min="0" name="thickness" aria-describedby="thickness" placeholder="Enter thickness">
-                    </div>
-                </form>
+                
+                    <label for="width">Width</label>
+                    <input type="range" name="width" min="1" max="100" value="50" id="width">
+
+                    <br>
+                    <label for="height">Height</label>
+                    <input type="range" name="height" min="1" max="100" value="50" id="height">
+
+                    <br>
+                    <label for="depth">Depth</label>
+                    <input type="range" name="depth" min="1" max="100" value="50" id="depth">
+                
             </div>
             <div id="edge-type-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
@@ -102,7 +96,7 @@
             <div id="holes-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
                 <form>
-                    <label for="edge-type">Hole Shape Type</label>
+                <label for="edge-type">Hole Shape Type</label>
                     <div class="form-check">
                         <input id="rect" class="form-check-input" type="radio" name="shape-type" id="rectangle" value="rectangle" checked>
                         <label class="form-check-label" for="shape-type">
@@ -131,10 +125,24 @@
                             <input class="form-control" type="number" min="0" name="shape-height" aria-describedby="shape-height" placeholder="Height">
                         </div>
                     </div>
+
+                    <button type="button" id="front">Front</button>
+                    <button type="button" id="top">Top</button>
+                    <button type="button" id="right">Right</button>
+                    <button type="button" id="left">Left</button>
+                    <button type="button" id="bottom">Bottom</button>
+                    <button type="button" id="back">Back</button>
                 </form>
             </div>
         </div>
-    </div>
+	</div>
+	<!--div class="col-sm-9" id="editor">
+	</div-->
+                    
     <div class="col-md-8 col-lg-9" id="editor">
+     <canvas id="model_canvas"></canvas>
     </div>
 </div>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/3dmodel.js"></script>
