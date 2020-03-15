@@ -18,6 +18,16 @@ hr {
     /* firefox */
 }
 
+.search-icon {
+  position: relative;
+  display: flex;
+  min-width: 100px;
+}
+
+.add {
+  filter: invert(100%);
+}
+
 #sidebar {
     display: inline-block;
     z-index: 10;
