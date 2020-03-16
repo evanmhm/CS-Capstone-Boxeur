@@ -9,7 +9,7 @@ var holesList = []; //Hole list for saving the box
 
 var mouse = new THREE.Vector2();
 
-var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX  !!!!!!!!!!!//
+var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
 var formWidth, formDepth, formHeight;
 
 var frustumSize = 600;
@@ -27,15 +27,16 @@ document.getElementById("height").addEventListener('input', updateGeometry, fals
 document.getElementById("depth").addEventListener('input', updateGeometry,false);
 
 //Set listeners for what side to look at during hole placement
-document.getElementById("front").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 0; camera.position.z = 51; gridPlacer(e.target.id); document.getElementById("model_canvas").addEventListener('click', helper, false);}, false);
-document.getElementById("back").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 0; camera.position.z = -51; gridPlacer(e.target.id);}, false);
-document.getElementById("top").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = 51; camera.position.z = 0; gridPlacer(e.target.id);}, false);
-document.getElementById("bottom").addEventListener('click', function(e){camera.position.x = 0; camera.position.y = -51; camera.position.z = 0; gridPlacer(e.target.id);}, false);
-document.getElementById("right").addEventListener('click', function(e){camera.position.x = 51; camera.position.y = 0; camera.position.z = 0; gridPlacer(e.target.id);}, false);
-document.getElementById("left").addEventListener('click', function(e){camera.position.x = -51; camera.position.y = 0; camera.position.z = 0; gridPlacer(e.target.id);}, false);
+document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);
+document.getElementById("back").addEventListener('click', function(e){holePlacement(e, 0, 0, -51)}, false);
+document.getElementById("top").addEventListener('click', function(e){holePlacement(e, 0, 51, 0)}, false);
+document.getElementById("bottom").addEventListener('click', function(e){holePlacement(e, 0, -51, 0)}, false);
+document.getElementById("right").addEventListener('click', function(e){holePlacement(e, 51, 0, 0)}, false);
+document.getElementById("left").addEventListener('click', function(e){holePlacement(e, -51, 0, 0)}, false);
 
 animate();
 
+//Set up variables, scene and renderer elements.
 function init() {
 
 	scene = new THREE.Scene();
@@ -60,7 +61,7 @@ function init() {
 	scene.add(holeMesh);
 
 	raycaster = new THREE.Raycaster();
-	raycaster.linePrecision = 3;
+	raycaster.params.Line.threshold = 3;
 
 	renderer = new THREE.WebGLRenderer( { antialias: true, canvas: model_canvas } );
 	renderer.setSize(width, height, false);
@@ -68,6 +69,7 @@ function init() {
 	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));	
 }
 
+//Animation loop
 function animate() {
 
 	onWindowResize();
@@ -79,6 +81,26 @@ function animate() {
 
 }
 
+//Tried a thousand different methods to resize the canvas with a window resize, but nothing seems to work.
+//Edit: Suddenly it works. Weird.
+function onWindowResize(){
+
+	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
+	width = canvasDims.width;
+	height = canvasDims.height;
+
+	aspect = width / height;
+
+	if (canvas.width !== width || canvas.height !== height) {
+		renderer.setSize(width, height, false);
+		camera.aspect = aspect;
+	}
+
+		camera.updateProjectionMatrix();
+
+}
+
+//Renderer function
 function render(){
 
 	if(scene.getObjectByName('grid') != null){
@@ -105,26 +127,6 @@ function render(){
 	renderer.render( scene, camera );
 }
 
-function helper(){
-
-	if(scene.getObjectByName('grid') != null){
-		raycaster.setFromCamera( mouse, camera );
-
-		var intersects = raycaster.intersectObject( grid );
-
-		if ( intersects.length > 0 ) {
-
-			var intpoint = intersects[0].point;
-
-			scene.add(testHole);
-			testHole.translateX(intpoint.x);
-			testHole.translateY(intpoint.y);
-			testHole.translateZ(intpoint.z);
-
-		} 
-	}
-}
-
 //Change box geometry based on form values when a slider is being input
 function updateGeometry(){
 
@@ -143,6 +145,39 @@ function updateGeometry(){
 
 }
 
+function holePlacement(event, x, y, z){
+
+	camera.position.x = x; camera.position.y = y; camera.position.z = z;
+	gridPlacer(event.target.id); 
+	document.getElementById("model_canvas").addEventListener('click', helper, false);
+
+}
+
+//Helper function to place a hole. 
+function helper(){
+
+	if(scene.getObjectByName('grid') != null){
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObject( grid );
+
+		if ( intersects.length > 0 ) {
+
+			var intpoint = intersects[0].point;
+
+			scene.add(testHole);
+			testHole.translateX(intpoint.x);
+			testHole.translateY(intpoint.y);
+			testHole.translateZ(intpoint.z);
+
+			/*  DO SAVING HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
+			
+
+		} 
+	}
+}
+
+//function to swap grid placement depending on which face button was clicked
 function gridPlacer(face){
 
 	if(scene.getObjectByName('grid') != null){
@@ -156,25 +191,25 @@ function gridPlacer(face){
 			grid.rotateX(Math.PI/2);
 			break;
 		case "back":
-			grid = new THREE.GridHelper(lastWidth, lastWidth/2);
+			grid = new THREE.GridHelper(lastWidth, 10);
 			grid.translateZ(-lastDepth/2);
 			grid.rotateX(Math.PI/2);
 			break;
 		case "top":
-			grid = new THREE.GridHelper(lastHeight, lastHeight/2);
+			grid = new THREE.GridHelper(lastHeight, 10);
 			grid.translateY(lastHeight/2);
 			break;
 		case "bottom":
-			grid = new THREE.GridHelper(lastHeight, lastHeight/2);
+			grid = new THREE.GridHelper(lastHeight, 10);
 			grid.translateY(-lastHeight/2);
 			break;
 		case "right":
-			grid = new THREE.GridHelper(lastDepth, lastDepth/2);
+			grid = new THREE.GridHelper(lastDepth, 10);
 			grid.translateX(lastWidth/2);
 			grid.rotateZ(Math.PI/2);
 			break;
 		case "left":
-			grid = new THREE.GridHelper(lastDepth, lastDepth/2);
+			grid = new THREE.GridHelper(lastDepth, 10);
 			grid.translateX(-lastWidth/2);
 			grid.rotateZ(Math.PI/2);
 			break;
@@ -183,38 +218,23 @@ function gridPlacer(face){
 	grid.name = "grid";
 	scene.add(grid);
 	
+	document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
+	
 	document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
 }
 
+//Function tracking mousemovement when in hole placement mode
 function onCanvasMouseMove(event){
 
 	event.preventDefault();
 
-	mouse.x = ( event.clientX / (window.innerWidth +375) ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+	mouse.x = ( ( event.clientX - canvasDims.left ) / ( canvasDims.right - canvasDims.left ) ) * 2 - 1;
+	mouse.y = - ( ( event.clientY - canvasDims.top ) / ( canvasDims.bottom - canvasDims.top ) ) * 2 + 1;
 
-	console.log(mouse);
+	//console.log(mouse);
 }
 
-//Tried a thousand different methods to resize the canvas with a window resize, but nothing seems to work.
-//Edit: Suddenly it works. Weird.
-function onWindowResize(){
-
-	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
-	width = canvasDims.width;
-	height = canvasDims.height;
-
-	aspect = width / height;
-
-	if (canvas.width !== width || canvas.height !== height) {
-		renderer.setSize(width, height, false);
-		camera.aspect = aspect;
-	}
-
-		camera.updateProjectionMatrix();
-
-}
-
+//Separate function to set geometry up, keeps code a little cleaner.
 function setUpGeometry(){
 
 	//Box Geometry
@@ -280,13 +300,19 @@ function setUpGeometry(){
 }
 
 
-//  CODE FOR HOLES OBJECT  //
 
+// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented) 
+// and a list/array of holes, using the hole class below.
+
+//  CODE FOR HOLES OBJECT  //
 //Constructor
-function Hole(x, y, z, type, face){
-	this.x = x;
-	this.y = y;
-	this.z = z;
-	this.type = type;
-	this.face = face;
+class Hole {
+	constructor(x, y, z, type, face) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		this.type = type;
+		this.face = face;
+	}
 }
