@@ -6,10 +6,12 @@ var controls;
 var grid;
 var raycaster, holeGeometry, holeMaterial, holeMesh;
 var testHole;
+var testsubtract;
 
 var holesList = []; //Hole list for saving the box
 
-var removeListener = false;
+var removeMouseListener = false;
+var removeHoleClickListener = false;
 
 var mouse = new THREE.Vector2();
 
@@ -53,7 +55,7 @@ function init() {
 		scene.add( mesh[i] );
 	}
 	
-	holeGeometry = new THREE.PlaneGeometry(5, 5);
+	holeGeometry = new THREE.BoxGeometry(5, 5, 10);
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
 	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 	testHole = new THREE.Mesh(holeGeometry, holeMaterial);
@@ -108,8 +110,11 @@ function render(){
 
 		if ( intersects.length > 0 ) {
 
+			var fixed = intersects[0].point;
+			var fix = new THREE.Vector3(0, 0, 2.5)
+			
+			holeMesh.position.copy( fixed.sub(fix) );
 			holeMesh.visible = true;
-			holeMesh.position.copy( intersects[0].point );
 
 		} else {
 
@@ -212,7 +217,14 @@ function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
 	gridPlacer(event.target.id); 
-	document.getElementById("model_canvas").addEventListener('click', helper, false);
+	
+	if(removeHoleClickListener == true){
+		document.getElementById("model_canvas").removeEventListener('click', helper, false);
+		removeHoleClickListener = false;
+	} else {
+		document.getElementById("model_canvas").addEventListener('click', helper, false);
+		removeHoleClickListener = true;
+	}
 
 }
 
@@ -257,12 +269,12 @@ function gridPlacer(face){
 	grid.name = "grid";
 	scene.add(grid);
 	
-	if(removeListener == true){
+	if(removeMouseListener == true){
 		document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
-		removeListener = false;
+		removeMouseListener = false;
 	} else {
 		document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
-		removeListener = true;
+		removeMouseListener = true;
 	}
 }
 
@@ -278,11 +290,16 @@ function helper(){
 
 			var intpoint = intersects[0].point;
 
-			scene.add(testHole);
+			//scene.add(testHole);
 			testHole.translateX(intpoint.x);
 			testHole.translateY(intpoint.y);
 			testHole.translateZ(intpoint.z);
 
+			var newmat = new THREE.MeshBasicMaterial({ color: 0xff0000, vertexColors: THREE.FaceColors });
+			testsubtract = threecsg.subtract(mesh[0], testHole, newmat);
+			scene.remove(mesh[0]);
+			scene.add(testsubtract);
+			
 			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
 			
 
@@ -512,26 +529,51 @@ function bottomBox(index){
 }
 
 //Function to set faces and face colors
+//Use index to set the color inside the cube to a a neutral color
 function setFaces(index){
 
-	// front
-	geometry[index].faces[0].color.setHex(0xff0000);
-	geometry[index].faces[1].color.setHex(0xff0000);
-	// right
-	geometry[index].faces[2].color.setHex(0x008000);
-	geometry[index].faces[3].color.setHex(0x008000);
-	// back
-	geometry[index].faces[4].color.setHex(0x0000ff);
-	geometry[index].faces[5].color.setHex(0x0000ff);
-	// left
-	geometry[index].faces[6].color.setHex(0xffff00);
-	geometry[index].faces[7].color.setHex(0xffff00);
-	// top
-	geometry[index].faces[8].color.setHex(0x800080);
-	geometry[index].faces[9].color.setHex(0x800080);
-	// bottom
-	geometry[index].faces[10].color.setHex(0xff5733);
-	geometry[index].faces[11].color.setHex(0xff5733);
+	if(index == 2){
+		geometry[index].faces[0].color.setHex(0x000000);
+		geometry[index].faces[1].color.setHex(0x000000);
+	} else { // front
+		geometry[index].faces[0].color.setHex(0xff0000);
+		geometry[index].faces[1].color.setHex(0xff0000);
+	}
+	if(index == 3){
+		geometry[index].faces[2].color.setHex(0x000000);
+		geometry[index].faces[3].color.setHex(0x000000);
+	} else {// right
+		geometry[index].faces[2].color.setHex(0x008000);
+		geometry[index].faces[3].color.setHex(0x008000);
+	}
+	if(index == 0){
+		geometry[index].faces[4].color.setHex(0x000000);
+		geometry[index].faces[5].color.setHex(0x000000);
+	} else {// back
+		geometry[index].faces[4].color.setHex(0x0000ff);
+		geometry[index].faces[5].color.setHex(0x0000ff);
+	}
+	if(index == 1){
+		geometry[index].faces[6].color.setHex(0x000000);
+		geometry[index].faces[7].color.setHex(0x000000);
+	} else {// left
+		geometry[index].faces[6].color.setHex(0xffff00);
+		geometry[index].faces[7].color.setHex(0xffff00);
+	}
+	if(index == 5){
+		geometry[index].faces[8].color.setHex(0x000000);
+		geometry[index].faces[9].color.setHex(0x000000);
+	} else {// top
+		geometry[index].faces[8].color.setHex(0x800080);
+		geometry[index].faces[9].color.setHex(0x800080);
+	}
+	if(index == 4){
+		geometry[index].faces[10].color.setHex(0x000000);
+		geometry[index].faces[11].color.setHex(0x000000);
+	} else {// bottom
+		geometry[index].faces[10].color.setHex(0xff5733);
+		geometry[index].faces[11].color.setHex(0xff5733);
+	}
 }
 
 
