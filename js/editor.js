@@ -5,7 +5,9 @@ if (clickProjcet) {
 		document.getElementById("project-options").className = "d-block";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-none";
-		document.getElementById("holes-options").className = "d-none";
+        document.getElementById("holes-options").className = "d-none";
+        document.getElementById("download-save-options").className = "d-none";
+
         var children = clickProjcet.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -23,7 +25,9 @@ if (clickDimension) {
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-block";
 		document.getElementById("edge-type-options").className = "d-none";
-		document.getElementById("holes-options").className = "d-none";
+        document.getElementById("holes-options").className = "d-none";
+        document.getElementById("download-save-options").className = "d-none";
+
         var children = clickDimension.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -47,7 +51,9 @@ if (clickEdge) {
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-block";
-		document.getElementById("holes-options").className = "d-none";
+        document.getElementById("holes-options").className = "d-none";
+        document.getElementById("download-save-options").className = "d-none";
+
         var children = clickDimension.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -70,7 +76,9 @@ if (clickHoles) {
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-none";
-		document.getElementById("holes-options").className = "d-block";
+        document.getElementById("holes-options").className = "d-block";
+        document.getElementById("download-save-options").className = "d-none";
+
         var children = clickDimension.parentElement.parentElement.children;
         var i;
         for (i = 0; i < children.length; i++) {
@@ -78,6 +86,27 @@ if (clickHoles) {
         }
         clickHoles.parentElement.className = "active";
         controls.enabled = false;
+        document.getElementById("editor").addEventListener('mousemove', onCanvasMouseMove, false);
+	});
+}
+
+
+
+
+var clickDownload = document.getElementById("download/save");
+console.log(clickDownload);
+if (clickDownload) {
+	clickDownload.addEventListener('click', function() {
+		document.getElementById("project-options").className = "d-none";
+		document.getElementById("dimension-options").className = "d-none";
+		document.getElementById("edge-type-options").className = "d-none";
+        document.getElementById("holes-options").className = "d-none";
+        document.getElementById("download-save-options").className = "d-block";
+       
+        
+        var filename = "boxeur.dxf";
+
+       
         document.getElementById("editor").addEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
