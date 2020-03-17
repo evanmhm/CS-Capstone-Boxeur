@@ -1,11 +1,15 @@
 var camera, scene, renderer;
-var geometry, material, mesh;
+var geometry = [];
+var mesh = [];
+var material;
 var controls;
 var grid;
 var raycaster, holeGeometry, holeMaterial, holeMesh;
 var testHole;
 
 var holesList = []; //Hole list for saving the box
+
+var removeListener = false;
 
 var mouse = new THREE.Vector2();
 
@@ -21,18 +25,7 @@ var aspect = width/height;
 
 init();
 
-//Set listeners for the dimension options
-document.getElementById("width").addEventListener('input', updateGeometry, false);
-document.getElementById("height").addEventListener('input', updateGeometry, false);
-document.getElementById("depth").addEventListener('input', updateGeometry,false);
-
-//Set listeners for what side to look at during hole placement
-document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);
-document.getElementById("back").addEventListener('click', function(e){holePlacement(e, 0, 0, -51)}, false);
-document.getElementById("top").addEventListener('click', function(e){holePlacement(e, 0, 51, 0)}, false);
-document.getElementById("bottom").addEventListener('click', function(e){holePlacement(e, 0, -51, 0)}, false);
-document.getElementById("right").addEventListener('click', function(e){holePlacement(e, 51, 0, 0)}, false);
-document.getElementById("left").addEventListener('click', function(e){holePlacement(e, -51, 0, 0)}, false);
+setListeners();
 
 animate();
 
@@ -50,9 +43,15 @@ function init() {
 
 	scene.add(camera);
 
-	setUpGeometry();
+	material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors });
 
-	scene.add( mesh );
+	for(var i=0; i<6; i++){
+		setUpBasicGeometry(i);
+		setUpBoxProperties(i);
+
+		mesh[i] = new THREE.Mesh( geometry[i], material );
+		scene.add( mesh[i] );
+	}
 	
 	holeGeometry = new THREE.PlaneGeometry(5, 5);
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
@@ -81,8 +80,7 @@ function animate() {
 
 }
 
-//Tried a thousand different methods to resize the canvas with a window resize, but nothing seems to work.
-//Edit: Suddenly it works. Weird.
+//Function to resize canvas when window changes size. 
 function onWindowResize(){
 
 	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
@@ -127,54 +125,95 @@ function render(){
 	renderer.render( scene, camera );
 }
 
-//Change box geometry based on form values when a slider is being input
-function updateGeometry(){
+//
+//
+//
+//
+//Basic 3d code ends here, the following functions are listener handlers and helper functions for code clarity
+//
+//
+//
+//
+
+
+//Function to change edge types
+function edgeType(event){
+
+	switch(event.target.id){
+		case "flat":
+
+			break;
+		case "finger":
+			break;
+		case "t-slot":
+			break;
+	}
+}
+
+//Change box geometry based on form values when a slider is being input or if a value is entered into the form.
+//Really need to think of a more elegant way to do each face other than a switch.
+function updateDimensions(event){
 
 	formWidth = document.getElementById("width").value;
 	formHeight = document.getElementById("height").value;
 	formDepth = document.getElementById("depth").value;
 
-	geometry.scale(formWidth/lastWidth, formHeight/lastHeight, formDepth/lastDepth);
+	//Only 2 sides need to be translated depending on what measurement is being changed
+	switch(event.target.id){
+		case "width":
+			geometry[1].translate((formWidth-lastWidth)/2, 0, 0);
+			geometry[3].translate((-(formWidth-lastWidth))/2, 0, 0);
+			break;
+		case "height":
+			geometry[4].translate(0, (formHeight-lastHeight)/2, 0);
+			geometry[5].translate(0, (-(formHeight-lastHeight))/2, 0);
+			break;
+		case "depth":
+			geometry[0].translate(0, 0, (formDepth-lastDepth)/2);
+			geometry[2].translate(0, 0, (-(formDepth-lastDepth))/2);
+			break;
+	}
+	
+	//We want two measurements of each box face to scale, and one to translate, in order to preserve eventual material thickness property
+	for(var i=0; i<6; i++){
+		switch(i){
+			case 0: //Front
+				geometry[i].scale(formWidth/lastWidth, formHeight/lastHeight, 1);
+				break;
+			case 1: //Right
+				geometry[i].scale(1, formHeight/lastHeight, formDepth/lastDepth);
+				break;
+			case 2: //Back
+				geometry[i].scale(formWidth/lastWidth, formHeight/lastHeight, 1);
+				break;
+			case 3: //Left
+				geometry[i].scale(1, formHeight/lastHeight, formDepth/lastDepth);
+				break;
+			case 4: //Top
+				geometry[i].scale(formWidth/lastWidth, 1, formDepth/lastDepth);
+				break;
+			case 5: //Bottom
+				geometry[i].scale(formWidth/lastWidth, 1, formDepth/lastDepth);
+				break;
+		}
+		geometry[i].verticesNeedUpdate = true;
+	}
+
+	//console.log(event.target.id);
 
 	lastWidth = formWidth;
 	lastHeight = formHeight;
 	lastDepth = formDepth;
 
-	geometry.verticesNeedUpdate = true;
-	//geometry.normalsNeedUpdate = true;
-
 }
 
+//Function to change camera angle, call grid placement, and set up listener for hole placement helper 
 function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
 	gridPlacer(event.target.id); 
 	document.getElementById("model_canvas").addEventListener('click', helper, false);
 
-}
-
-//Helper function to place a hole. 
-function helper(){
-
-	if(scene.getObjectByName('grid') != null){
-		raycaster.setFromCamera( mouse, camera );
-
-		var intersects = raycaster.intersectObject( grid );
-
-		if ( intersects.length > 0 ) {
-
-			var intpoint = intersects[0].point;
-
-			scene.add(testHole);
-			testHole.translateX(intpoint.x);
-			testHole.translateY(intpoint.y);
-			testHole.translateZ(intpoint.z);
-
-			/*  DO SAVING HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
-			
-
-		} 
-	}
 }
 
 //function to swap grid placement depending on which face button was clicked
@@ -218,9 +257,37 @@ function gridPlacer(face){
 	grid.name = "grid";
 	scene.add(grid);
 	
-	document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
-	
-	document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
+	if(removeListener == true){
+		document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
+		removeListener = false;
+	} else {
+		document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
+		removeListener = true;
+	}
+}
+
+//Helper function to place a hole. 
+function helper(){
+
+	if(scene.getObjectByName('grid') != null){
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObject( grid );
+
+		if ( intersects.length > 0 ) {
+
+			var intpoint = intersects[0].point;
+
+			scene.add(testHole);
+			testHole.translateX(intpoint.x);
+			testHole.translateY(intpoint.y);
+			testHole.translateZ(intpoint.z);
+
+			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
+			
+
+		} 
+	}
 }
 
 //Function tracking mousemovement when in hole placement mode
@@ -235,23 +302,166 @@ function onCanvasMouseMove(event){
 }
 
 //Separate function to set geometry up, keeps code a little cleaner.
-function setUpGeometry(){
+//Need to rework geometry set up however, current implementation won't allow for edge types.
+function setUpBasicGeometry(index){
 
 	//Box Geometry
-	geometry = new THREE.Geometry();
+	geometry[index] = new THREE.Geometry();
 
-	geometry.vertices.push(
-		new THREE.Vector3(-25, -25, 25),
-		new THREE.Vector3(25, -25, 25),
-		new THREE.Vector3(-25, 25, 25),
-		new THREE.Vector3(25, 25, 25),
-		new THREE.Vector3(-25, -25, -25),
-		new THREE.Vector3(25, -25, -25),
-		new THREE.Vector3(-25, 25, -25),
-		new THREE.Vector3(25, 25, -25)
+	geometry[index].vertices.push(
+		new THREE.Vector3(-25, -2.5, 25),
+		new THREE.Vector3(25, -2.5, 25),
+		new THREE.Vector3(-25, 2.5, 25),
+		new THREE.Vector3(25, 2.5, 25),
+		new THREE.Vector3(-25, -2.5, -25),
+		new THREE.Vector3(25, -2.5, -25),
+		new THREE.Vector3(-25, 2.5, -25),
+		new THREE.Vector3(25, 2.5, -25)
 	);
 
-    geometry.faces.push(
+}
+
+//A bit messy, but each face needs to be a seperate box, which requires different set up for each,
+// to allow for edge type implementation.
+function setUpBoxProperties(index){
+
+	switch(index){
+		case 0: 
+			frontBox(index);
+			break;
+		case 1: 
+			rightBox(index);
+			break;
+		case 2: 
+			backBox(index);
+			break;
+		case 3: 
+			leftBox(index);
+			break;
+		case 4: 
+			topBox(index);
+			break;
+		case 5: 
+			bottomBox(index);
+			break;
+	}
+}
+
+//These are required to get proper face indexes for colors and future modification. Probably a better way to do this, 
+// but not my current focus.
+function frontBox(index){
+	geometry[index].rotateX(Math.PI/2);
+	geometry[index].translate(0, 0, 22.5);
+
+	geometry[index].faces.push(
+		// front
+		new THREE.Face3(2, 7, 6),
+		new THREE.Face3(2, 3, 7),
+		// right
+		new THREE.Face3(1, 7, 3),
+		new THREE.Face3(1, 5, 7),
+		// back
+		new THREE.Face3(4, 1, 0),
+		new THREE.Face3(4, 5, 1),
+		// left
+		new THREE.Face3(4, 2, 6),
+		new THREE.Face3(4, 0, 2),
+		// top
+		new THREE.Face3(5, 6, 7),
+		new THREE.Face3(5, 4, 6),
+		// bottom
+		new THREE.Face3(0, 3, 2),
+		new THREE.Face3(0, 1, 3),
+	);
+
+	setFaces(index);
+}
+function rightBox(index){
+	geometry[index].rotateZ(Math.PI/2);
+	geometry[index].translate(22.5, 0, 0);
+	
+	geometry[index].faces.push(
+		// front
+		new THREE.Face3(0, 3, 2),
+		new THREE.Face3(0, 1, 3),
+		// right
+		new THREE.Face3(4, 1, 0),
+		new THREE.Face3(4, 5, 1),
+		// back
+		new THREE.Face3(5, 6, 7),
+		new THREE.Face3(5, 4, 6),
+		// left
+		new THREE.Face3(2, 7, 6),
+		new THREE.Face3(2, 3, 7),
+		// top
+		new THREE.Face3(1, 7, 3),
+		new THREE.Face3(1, 5, 7),
+		// bottom
+		new THREE.Face3(4, 2, 6),
+		new THREE.Face3(4, 0, 2),
+		
+	);
+
+	setFaces(index);
+}
+function backBox(index){
+	geometry[index].rotateX(Math.PI/2);
+	geometry[index].translate(0, 0, -22.5);
+
+	geometry[index].faces.push(
+		// front
+		new THREE.Face3(2, 7, 6),
+		new THREE.Face3(2, 3, 7),
+		// right
+		new THREE.Face3(1, 7, 3),
+		new THREE.Face3(1, 5, 7),
+		// back
+		new THREE.Face3(4, 1, 0),
+		new THREE.Face3(4, 5, 1),
+		// left
+		new THREE.Face3(4, 2, 6),
+		new THREE.Face3(4, 0, 2),
+		// top
+		new THREE.Face3(5, 6, 7),
+		new THREE.Face3(5, 4, 6),
+		// bottom
+		new THREE.Face3(0, 3, 2),
+		new THREE.Face3(0, 1, 3),
+	);
+
+	setFaces(index);
+}
+function leftBox(index){
+	geometry[index].rotateZ(Math.PI/2);
+	geometry[index].translate(-22.5, 0, 0);
+
+	geometry[index].faces.push(
+		// front
+		new THREE.Face3(0, 3, 2),
+		new THREE.Face3(0, 1, 3),
+		// right
+		new THREE.Face3(4, 1, 0),
+		new THREE.Face3(4, 5, 1),
+		// back
+		new THREE.Face3(5, 6, 7),
+		new THREE.Face3(5, 4, 6),
+		// left
+		new THREE.Face3(2, 7, 6),
+		new THREE.Face3(2, 3, 7),
+		// top
+		new THREE.Face3(1, 7, 3),
+		new THREE.Face3(1, 5, 7),
+		// bottom
+		new THREE.Face3(4, 2, 6),
+		new THREE.Face3(4, 0, 2),
+	);
+
+	setFaces(index);
+}
+function topBox(index){
+	geometry[index].translate(0, 22.5, 0);
+
+	geometry[index].faces.push(
 		// front
 		new THREE.Face3(0, 3, 2),
 		new THREE.Face3(0, 1, 3),
@@ -270,35 +480,82 @@ function setUpGeometry(){
 		// bottom
 		new THREE.Face3(4, 1, 0),
 		new THREE.Face3(4, 5, 1),
-	  );
+	);
 
-	//geometry.computeFaceNormals();
+	setFaces(index);
+}
+function bottomBox(index){
+	geometry[index].translate(0, -22.5, 0);
 
-	// front
-	geometry.faces[0].color.setHex(0xff0000);
-	geometry.faces[1].color.setHex(0xff0000);
-	// right
-	geometry.faces[2].color.setHex(0x008000);
-	geometry.faces[3].color.setHex(0x008000);
-	// back
-	geometry.faces[4].color.setHex(0x0000ff);
-	geometry.faces[5].color.setHex(0x0000ff);
-	// left
-	geometry.faces[6].color.setHex(0xffff00);
-	geometry.faces[7].color.setHex(0xffff00);
-	// top
-	geometry.faces[8].color.setHex(0x800080);
-	geometry.faces[9].color.setHex(0x800080);
-	// bottom
-	geometry.faces[10].color.setHex(0xff5733);
-	geometry.faces[11].color.setHex(0xff5733);
+	geometry[index].faces.push(
+		// front
+		new THREE.Face3(0, 3, 2),
+		new THREE.Face3(0, 1, 3),
+		// right
+		new THREE.Face3(1, 7, 3),
+		new THREE.Face3(1, 5, 7),
+		// back
+		new THREE.Face3(5, 6, 7),
+		new THREE.Face3(5, 4, 6),
+		// left
+		new THREE.Face3(4, 2, 6),
+		new THREE.Face3(4, 0, 2),
+		// top
+		new THREE.Face3(2, 7, 6),
+		new THREE.Face3(2, 3, 7),
+		// bottom
+		new THREE.Face3(4, 1, 0),
+		new THREE.Face3(4, 5, 1),
+	);
 
-	material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors });
-
-	mesh = new THREE.Mesh( geometry, material );
-
+	setFaces(index);
 }
 
+//Function to set faces and face colors
+function setFaces(index){
+
+	// front
+	geometry[index].faces[0].color.setHex(0xff0000);
+	geometry[index].faces[1].color.setHex(0xff0000);
+	// right
+	geometry[index].faces[2].color.setHex(0x008000);
+	geometry[index].faces[3].color.setHex(0x008000);
+	// back
+	geometry[index].faces[4].color.setHex(0x0000ff);
+	geometry[index].faces[5].color.setHex(0x0000ff);
+	// left
+	geometry[index].faces[6].color.setHex(0xffff00);
+	geometry[index].faces[7].color.setHex(0xffff00);
+	// top
+	geometry[index].faces[8].color.setHex(0x800080);
+	geometry[index].faces[9].color.setHex(0x800080);
+	// bottom
+	geometry[index].faces[10].color.setHex(0xff5733);
+	geometry[index].faces[11].color.setHex(0xff5733);
+}
+
+
+//Function to set up listeners. Keeps code a little cleaner near the top.
+
+function setListeners(){
+	//Set listeners for the dimension options
+	document.getElementById("width").addEventListener('input', updateDimensions, false);
+	document.getElementById("height").addEventListener('input', updateDimensions, false);
+	document.getElementById("depth").addEventListener('input', updateDimensions,false);
+
+	//Set listeners for edge types
+	document.getElementById("fingers").addEventListener('click', edgeType, false);
+	document.getElementById("flat").addEventListener('click', edgeType, false);
+	document.getElementById("t-slot").addEventListener('click', edgeType, false);
+
+	//Set listeners for what side to look at during hole placement
+	document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);
+	document.getElementById("back").addEventListener('click', function(e){holePlacement(e, 0, 0, -51)}, false);
+	document.getElementById("top").addEventListener('click', function(e){holePlacement(e, 0, 51, 0)}, false);
+	document.getElementById("bottom").addEventListener('click', function(e){holePlacement(e, 0, -51, 0)}, false);
+	document.getElementById("right").addEventListener('click', function(e){holePlacement(e, 51, 0, 0)}, false);
+	document.getElementById("left").addEventListener('click', function(e){holePlacement(e, -51, 0, 0)}, false);
+}
 
 
 // When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented) 

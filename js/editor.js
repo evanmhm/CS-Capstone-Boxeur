@@ -2,6 +2,16 @@ var clickProjcet = document.getElementById("project");
 console.log(clickProjcet);
 if (clickProjcet) {
 	clickProjcet.addEventListener('click', function() {
+
+        if(document.getElementById("holes-options").classList.contains("d-block") == true){
+            controls.enabled = true;
+            camera.position.x = 120;
+            camera.position.y = 120;
+            camera.position.z = 120;
+            scene.remove(grid);
+            document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
+        }
+
 		document.getElementById("project-options").className = "d-block";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-none";
@@ -20,6 +30,16 @@ var clickDimension = document.getElementById("dimension");
 console.log(clickDimension);
 if (clickDimension) {
 	clickDimension.addEventListener('click', function() {
+
+        if(document.getElementById("holes-options").classList.contains("d-block") == true){
+            controls.enabled = true;
+            camera.position.x = 120;
+            camera.position.y = 120;
+            camera.position.z = 120;
+            scene.remove(grid);
+            document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
+        }
+
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-block";
 		document.getElementById("edge-type-options").className = "d-none";
@@ -31,12 +51,6 @@ if (clickDimension) {
         }
 
         clickDimension.parentElement.className = "active";
-        controls.enabled = true;
-        camera.position.x = 120;
-        camera.position.y = 120;
-        camera.position.z = 120;
-        scene.remove(grid);
-        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -44,6 +58,16 @@ var clickEdge = document.getElementById("edge-type");
 console.log(clickEdge);
 if (clickEdge) {
 	clickEdge.addEventListener('click', function() {
+
+        if(document.getElementById("holes-options").classList.contains("d-block") == true){
+            controls.enabled = true;
+            camera.position.x = 120;
+            camera.position.y = 120;
+            camera.position.z = 120;
+            scene.remove(grid);
+            document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
+        }
+
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-block";
@@ -54,12 +78,6 @@ if (clickEdge) {
             children[i].classList.remove("active");
         }
         clickEdge.parentElement.className = "active";
-        controls.enabled = true;
-        camera.position.x = 120;
-        camera.position.y = 120;
-        camera.position.z = 120;
-        scene.remove(grid);
-        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 

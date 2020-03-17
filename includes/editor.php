@@ -74,20 +74,20 @@
                 <form>
                     <label for="edge-type">Edge Type</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="edge-type" id="fingers" value="fingers" checked>
+                        <input class="form-check-input" type="radio" name="edge-type" id="flat" value="flat" checked>
                         <label class="form-check-label" for="edge-type">
                             Flat
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="edge-type" id="flat" value="flat">
+                        <input class="form-check-input" type="radio" name="edge-type" id="fingers" value="fingers">
                         <label class="form-check-label" for="edge-type">
                             Fingers
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="edge-type" id="t-slot" value="t-slot">
-                        <label class="form-check-label" for="units">
+                        <label class="form-check-label" for="edge-type">
                             T-slot
                         </label>
                     </div>
@@ -143,6 +143,7 @@
      <canvas id="model_canvas"></canvas>
     </div>
 </div>
-        <script src="https://threejs.org/build/three.js"></script>
+        <script src="https://threejs.org/build/three.min.js"></script>
         <script src="js/OrbitControls.js"></script>
+        <script src="js/three-csg.js"></script>
         <script src="js/3dmodel.js"></script>
