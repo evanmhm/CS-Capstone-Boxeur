@@ -4,13 +4,12 @@ var controls;
 var grid;
 var raycaster, holeGeometry, holeMaterial, holeMesh;
 var testHole;
-
 var holesList = []; //Hole list for saving the box
 
 var mouse = new THREE.Vector2();
 
 var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
-var formWidth, formDepth, formHeight;
+var boxWidth, boxHeight, boxDepth;
 
 var frustumSize = 600;
 var canvas = document.getElementById("model_canvas").getContext("webgl");
@@ -21,10 +20,6 @@ var aspect = width/height;
 
 init();
 
-//Set listeners for the dimension options
-document.getElementById("width").addEventListener('input', updateGeometry, false);
-document.getElementById("height").addEventListener('input', updateGeometry, false);
-document.getElementById("depth").addEventListener('input', updateGeometry,false);
 
 //Set listeners for what side to look at during hole placement
 document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);
@@ -43,7 +38,7 @@ function init() {
 	scene.background = new THREE.Color(0xffffff);
 
 	camera = new THREE.OrthographicCamera( 0.3 * width / - 2, 0.3 * width / 2, 0.3 * height / 2, 0.3 * height / - 2, 1, 1000 );
-	
+
 	camera.position.x = 51;
 	camera.position.y = 51;
 	camera.position.z = 51;
@@ -51,9 +46,12 @@ function init() {
 	scene.add(camera);
 
 	setUpGeometry();
+	boxHeight = 50;
+	boxWidth = 50;
+	boxDepth = 50;
 
 	scene.add( mesh );
-	
+
 	holeGeometry = new THREE.PlaneGeometry(5, 5);
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
 	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
@@ -66,7 +64,7 @@ function init() {
 	renderer = new THREE.WebGLRenderer( { antialias: true, canvas: model_canvas } );
 	renderer.setSize(width, height, false);
 
-	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));	
+	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 }
 
 //Animation loop
@@ -129,16 +127,11 @@ function render(){
 
 //Change box geometry based on form values when a slider is being input
 function updateGeometry(){
+	geometry.scale(boxWidth/lastWidth, boxHeight/lastHeight, boxDepth/lastDepth);
 
-	formWidth = document.getElementById("width").value;
-	formHeight = document.getElementById("height").value;
-	formDepth = document.getElementById("depth").value;
-
-	geometry.scale(formWidth/lastWidth, formHeight/lastHeight, formDepth/lastDepth);
-
-	lastWidth = formWidth;
-	lastHeight = formHeight;
-	lastDepth = formDepth;
+	lastWidth = boxWidth;
+	lastHeight = boxHeight;
+	lastDepth = boxDepth;
 
 	geometry.verticesNeedUpdate = true;
 	//geometry.normalsNeedUpdate = true;
@@ -148,12 +141,12 @@ function updateGeometry(){
 function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
-	gridPlacer(event.target.id); 
+	gridPlacer(event.target.id);
 	document.getElementById("model_canvas").addEventListener('click', helper, false);
 
 }
 
-//Helper function to place a hole. 
+//Helper function to place a hole.
 function helper(){
 
 	if(scene.getObjectByName('grid') != null){
@@ -171,9 +164,9 @@ function helper(){
 			testHole.translateZ(intpoint.z);
 
 			/*  DO SAVING HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
-			
 
-		} 
+
+		}
 	}
 }
 
@@ -183,9 +176,9 @@ function gridPlacer(face){
 	if(scene.getObjectByName('grid') != null){
 		scene.remove(grid);
 	}
-	
+
 	switch(face){
-		case "front": 
+		case "front":
 			grid = new THREE.GridHelper(lastWidth, 10);
 			grid.translateZ(lastDepth/2);
 			grid.rotateX(Math.PI/2);
@@ -217,9 +210,9 @@ function gridPlacer(face){
 
 	grid.name = "grid";
 	scene.add(grid);
-	
+
 	document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
-	
+
 	document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
 }
 
@@ -301,7 +294,7 @@ function setUpGeometry(){
 
 
 
-// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented) 
+// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented)
 // and a list/array of holes, using the hole class below.
 
 //  CODE FOR HOLES OBJECT  //
@@ -311,7 +304,7 @@ class Hole {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		
+
 		this.type = type;
 		this.face = face;
 	}

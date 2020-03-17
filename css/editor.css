@@ -49,14 +49,12 @@ canvas{
 #options {
     position: relative;
     display: flex;
+    padding: 0 6%;
+
 }
 
-#dimension-options,
-#edge-type-options,
-#holes-options {
-    position: absolute;
-    left: 30px;
-    padding: 0 6%;
+.slider {
+    margin-bottom: -12px;
 }
 
 /* edgeTypeId will be on top of dimensionId */
