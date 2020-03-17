@@ -16,6 +16,7 @@ hr {
     /* google, safari */
     height: -moz-calc(100% - 56px);
     /* firefox */
+    margin: 0;
 }
 
 .search-icon {
@@ -32,7 +33,7 @@ hr {
     display: inline-block;
     z-index: 10;
     background-color: #fff;
-    padding-right: 0;
+    padding: 0;
     box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 #editor {

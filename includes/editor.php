@@ -56,7 +56,7 @@
             </div>
             <div id="dimension-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
-                
+
                     <label for="width">Width</label>
                     <input type="range" name="width" min="1" max="100" value="50" id="width">
 
@@ -67,7 +67,7 @@
                     <br>
                     <label for="depth">Depth</label>
                     <input type="range" name="depth" min="1" max="100" value="50" id="depth">
-                
+
             </div>
             <div id="edge-type-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
@@ -138,7 +138,7 @@
 	</div>
 	<!--div class="col-sm-9" id="editor">
 	</div-->
-                    
+
     <div class="col-md-8 col-lg-9" id="editor">
      <canvas id="model_canvas"></canvas>
     </div>
