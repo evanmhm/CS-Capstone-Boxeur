@@ -1,5 +1,5 @@
 # CS-Capstone-Boxeur
-OSU CS46X group 35 project repo, Boxeur case designer.
+OSU CS46X group 35 project repo, Boxeur case designer. Class documents can be found in /docs. 
 
 # Development
 To get the site running on the OSU server, first ssh into the server (`ssh YOUR_USERNAME@flip.engr.oregonstate.edu`).
