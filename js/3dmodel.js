@@ -1,33 +1,34 @@
 var camera, scene, renderer;
-var geometry, material, mesh;
+var material;
 var controls;
 var grid;
 var raycaster, holeGeometry, holeMaterial, holeMesh;
 var testHole;
+var testsubtract;
+
+var geometryList = [];
+var meshList = [];
+var edgeType = 0;
+
 var holesList = []; //Hole list for saving the box
 
-var mouse = new THREE.Vector2();
-
 var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
-var boxWidth, boxHeight, boxDepth;
+var boxWidth = 50, boxHeight = 50, boxDepth = 50;
 
-var frustumSize = 600;
 var canvas = document.getElementById("model_canvas").getContext("webgl");
 var canvasDims = document.getElementById("model_canvas").getBoundingClientRect();;
 var width = canvasDims.width;
 var height = canvasDims.height;
 var aspect = width/height;
 
+var mouse = new THREE.Vector2();
+
+var removeMouseListener = false;
+var removeHoleClickListener = false;
+
 init();
 
-
-//Set listeners for what side to look at during hole placement
-document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);
-document.getElementById("back").addEventListener('click', function(e){holePlacement(e, 0, 0, -51)}, false);
-document.getElementById("top").addEventListener('click', function(e){holePlacement(e, 0, 51, 0)}, false);
-document.getElementById("bottom").addEventListener('click', function(e){holePlacement(e, 0, -51, 0)}, false);
-document.getElementById("right").addEventListener('click', function(e){holePlacement(e, 51, 0, 0)}, false);
-document.getElementById("left").addEventListener('click', function(e){holePlacement(e, -51, 0, 0)}, false);
+setListeners();
 
 animate();
 
@@ -45,17 +46,19 @@ function init() {
 
 	scene.add(camera);
 
-	setUpGeometry();
-	boxHeight = 50;
-	boxWidth = 50;
-	boxDepth = 50;
+	material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors });
 
-	scene.add( mesh );
+	flatEdgeModel();
 
-	holeGeometry = new THREE.PlaneGeometry(5, 5);
+	for(var i=0; i<6; i++){
+		scene.add(meshList[0][i]);
+	}
+
+	holeGeometry = new THREE.BoxGeometry(5, 5, 10);
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
 	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 	testHole = new THREE.Mesh(holeGeometry, holeMaterial);
+	
 	scene.add(holeMesh);
 
 	raycaster = new THREE.Raycaster();
@@ -79,8 +82,7 @@ function animate() {
 
 }
 
-//Tried a thousand different methods to resize the canvas with a window resize, but nothing seems to work.
-//Edit: Suddenly it works. Weird.
+//Function to resize canvas when window changes size. 
 function onWindowResize(){
 
 	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
@@ -108,8 +110,11 @@ function render(){
 
 		if ( intersects.length > 0 ) {
 
+			var fixed = intersects[0].point;
+			var fix = new THREE.Vector3(0, 0, 2.5)
+			
+			holeMesh.position.copy( fixed.sub(fix) );
 			holeMesh.visible = true;
-			holeMesh.position.copy( intersects[0].point );
 
 		} else {
 
@@ -125,49 +130,105 @@ function render(){
 	renderer.render( scene, camera );
 }
 
-//Change box geometry based on form values when a slider is being input
-function updateGeometry(){
-	geometry.scale(boxWidth/lastWidth, boxHeight/lastHeight, boxDepth/lastDepth);
+//
+//
+//
+//
+//Basic 3d code ends here, the following functions are listener handlers and helper functions for code clarity
+//
+//
+//
+//
+
+
+//Function to change edge types
+function edgeTypeHandler(event){
+
+	switch(event.target.id){
+		case "flat":
+
+			break;
+		case "finger":
+			break;
+		case "t-slot":
+			break;
+	}
+}
+
+//Change box geometry based on form values when a slider is being input or if a value is entered into the form.
+//Really need to think of a more elegant way to do each face other than a switch.
+function updateDimensions(event){
+
+
+//	boxWidth = document.getElementById("width").value;
+//	boxHeight = document.getElementById("height").value;
+//	boxDepth = document.getElementById("depth").value;
+
+	//Only 2 sides need to be translated depending on what measurement is being changed
+	console.log(event.target.id, boxDepth, boxHeight, boxWidth);
+	switch(event.target.id){
+		case "slider-width":
+		case "width-value":
+			geometryList[edgeType][1].translate((boxWidth-lastWidth)/2, 0, 0);
+			geometryList[edgeType][3].translate((-(boxWidth-lastWidth))/2, 0, 0);
+			break;
+		case "slider-height":
+		case "height-value":
+			geometryList[edgeType][4].translate(0, (boxHeight-lastHeight)/2, 0);
+			geometryList[edgeType][5].translate(0, (-(boxHeight-lastHeight))/2, 0);
+			break;
+		case "slider-depth":
+		case "depth-value":
+			geometryList[edgeType][0].translate(0, 0, (boxDepth-lastDepth)/2);
+			geometryList[edgeType][2].translate(0, 0, (-(boxDepth-lastDepth))/2);
+			break;
+	}
+	
+	//We want two measurements of each box face to scale, and one to translate, in order to preserve eventual material thickness property
+	for(var i=0; i<6; i++){
+		switch(i){
+			case 0: //Front
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				break;
+			case 1: //Right
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				break;
+			case 2: //Back
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				break;
+			case 3: //Left
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				break;
+			case 4: //Top
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				break;
+			case 5: //Bottom
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				break;
+		}
+		geometryList[edgeType][i].verticesNeedUpdate = true;
+	}
 
 	lastWidth = boxWidth;
 	lastHeight = boxHeight;
 	lastDepth = boxDepth;
 
-	geometry.verticesNeedUpdate = true;
-	//geometry.normalsNeedUpdate = true;
-
 }
 
+//Function to change camera angle, call grid placement, and set up listener for hole placement helper 
 function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
-	gridPlacer(event.target.id);
-	document.getElementById("model_canvas").addEventListener('click', helper, false);
-
-}
-
-//Helper function to place a hole.
-function helper(){
-
-	if(scene.getObjectByName('grid') != null){
-		raycaster.setFromCamera( mouse, camera );
-
-		var intersects = raycaster.intersectObject( grid );
-
-		if ( intersects.length > 0 ) {
-
-			var intpoint = intersects[0].point;
-
-			scene.add(testHole);
-			testHole.translateX(intpoint.x);
-			testHole.translateY(intpoint.y);
-			testHole.translateZ(intpoint.z);
-
-			/*  DO SAVING HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
-
-
-		}
+	gridPlacer(event.target.id); 
+	
+	if(removeHoleClickListener == true){
+		document.getElementById("model_canvas").removeEventListener('click', helper, false);
+		removeHoleClickListener = false;
+	} else {
+		document.getElementById("model_canvas").addEventListener('click', helper, false);
+		removeHoleClickListener = true;
 	}
+
 }
 
 //function to swap grid placement depending on which face button was clicked
@@ -210,10 +271,43 @@ function gridPlacer(face){
 
 	grid.name = "grid";
 	scene.add(grid);
+	
+	if(removeMouseListener == true){
+		document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
+		removeMouseListener = false;
+	} else {
+		document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
+		removeMouseListener = true;
+	}
+}
 
-	document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
+//Helper function to place a hole. 
+function helper(){
 
-	document.getElementById("model_canvas").addEventListener('mousemove', onCanvasMouseMove, false);
+	if(scene.getObjectByName('grid') != null){
+		raycaster.setFromCamera( mouse, camera );
+
+		var intersects = raycaster.intersectObject( grid );
+
+		if ( intersects.length > 0 ) {
+
+			var intpoint = intersects[0].point;
+
+			//scene.add(testHole);
+			testHole.translateX(intpoint.x);
+			testHole.translateY(intpoint.y);
+			testHole.translateZ(intpoint.z);
+
+			var newmat = new THREE.MeshBasicMaterial({ color: 0xff0000, vertexColors: THREE.FaceColors });
+			testsubtract = threecsg.subtract(meshList[edgeType][0], testHole, newmat);
+			scene.remove(meshList[edgeType][0]);
+			scene.add(testsubtract);
+			
+			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
+			
+
+		} 
+	}
 }
 
 //Function tracking mousemovement when in hole placement mode
@@ -227,74 +321,30 @@ function onCanvasMouseMove(event){
 	//console.log(mouse);
 }
 
-//Separate function to set geometry up, keeps code a little cleaner.
-function setUpGeometry(){
+//Function to set up listeners. Keeps code a little cleaner near the top.
 
-	//Box Geometry
-	geometry = new THREE.Geometry();
+function setListeners(){
+	//Set listeners for the dimension options
+	document.getElementById("slider-width").addEventListener('input', updateDimensions, false);
+	document.getElementById("slider-height").addEventListener('input', updateDimensions, false);
+	document.getElementById("slider-depth").addEventListener('input', updateDimensions,false);
 
-	geometry.vertices.push(
-		new THREE.Vector3(-25, -25, 25),
-		new THREE.Vector3(25, -25, 25),
-		new THREE.Vector3(-25, 25, 25),
-		new THREE.Vector3(25, 25, 25),
-		new THREE.Vector3(-25, -25, -25),
-		new THREE.Vector3(25, -25, -25),
-		new THREE.Vector3(-25, 25, -25),
-		new THREE.Vector3(25, 25, -25)
-	);
+	//Set listeners for edge types
+	document.getElementById("flat").addEventListener('click', edgeTypeHandler, false);
+	document.getElementById("fingers").addEventListener('click', edgeTypeHandler, false);
+	document.getElementById("t-slot").addEventListener('click', edgeTypeHandler, false);
 
-    geometry.faces.push(
-		// front
-		new THREE.Face3(0, 3, 2),
-		new THREE.Face3(0, 1, 3),
-		// right
-		new THREE.Face3(1, 7, 3),
-		new THREE.Face3(1, 5, 7),
-		// back
-		new THREE.Face3(5, 6, 7),
-		new THREE.Face3(5, 4, 6),
-		// left
-		new THREE.Face3(4, 2, 6),
-		new THREE.Face3(4, 0, 2),
-		// top
-		new THREE.Face3(2, 7, 6),
-		new THREE.Face3(2, 3, 7),
-		// bottom
-		new THREE.Face3(4, 1, 0),
-		new THREE.Face3(4, 5, 1),
-	  );
-
-	//geometry.computeFaceNormals();
-
-	// front
-	geometry.faces[0].color.setHex(0xff0000);
-	geometry.faces[1].color.setHex(0xff0000);
-	// right
-	geometry.faces[2].color.setHex(0x008000);
-	geometry.faces[3].color.setHex(0x008000);
-	// back
-	geometry.faces[4].color.setHex(0x0000ff);
-	geometry.faces[5].color.setHex(0x0000ff);
-	// left
-	geometry.faces[6].color.setHex(0xffff00);
-	geometry.faces[7].color.setHex(0xffff00);
-	// top
-	geometry.faces[8].color.setHex(0x800080);
-	geometry.faces[9].color.setHex(0x800080);
-	// bottom
-	geometry.faces[10].color.setHex(0xff5733);
-	geometry.faces[11].color.setHex(0xff5733);
-
-	material = new THREE.MeshBasicMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors });
-
-	mesh = new THREE.Mesh( geometry, material );
-
+	//Set listeners for what side to look at during hole placement
+	document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);
+	document.getElementById("back").addEventListener('click', function(e){holePlacement(e, 0, 0, -51)}, false);
+	document.getElementById("top").addEventListener('click', function(e){holePlacement(e, 0, 51, 0)}, false);
+	document.getElementById("bottom").addEventListener('click', function(e){holePlacement(e, 0, -51, 0)}, false);
+	document.getElementById("right").addEventListener('click', function(e){holePlacement(e, 51, 0, 0)}, false);
+	document.getElementById("left").addEventListener('click', function(e){holePlacement(e, -51, 0, 0)}, false);
 }
 
 
-
-// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented)
+// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented) 
 // and a list/array of holes, using the hole class below.
 
 //  CODE FOR HOLES OBJECT  //

@@ -59,7 +59,7 @@
                 <div class="form-group pb-1">
                     <label>Width</label>
                     <div class="pl-2">
-                        <div class="slider" id="slider-width"></div><br/>
+                        <div class="slider" id="slider-width" value=50></div><br/>
                         <input id="width-value" type="text">
                         <span class="unit" style="margin-left:-20px;">in</span>
                     </div>
@@ -68,7 +68,7 @@
                 <div class="form-group pb-1">
                     <label>Height</label>
                     <div class="pl-2">
-                        <div class="slider" id="slider-height"></div><br/>
+                        <div class="slider" id="slider-height" value=50></div><br/>
                         <input id="height-value" type="text">
                         <span class="unit" style="margin-left:-20px;">in</span>
                     </div>
@@ -77,7 +77,7 @@
                 <div class="form-group pb-1">
                     <label>Depth</label>
                     <div class="pl-2">
-                        <div class="slider" id="slider-depth"></div><br/>
+                        <div class="slider" id="slider-depth" value=50></div><br/>
                         <input id="depth-value" type="text">
                         <span class="unit" style="margin-left:-20px;">in</span>
                     </div>
@@ -89,20 +89,20 @@
                 <form>
                     <label for="edge-type">Edge Type</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="edge-type" id="fingers" value="fingers" checked>
+                        <input class="form-check-input" type="radio" name="edge-type" id="flat" value="flat" checked>
                         <label class="form-check-label" for="edge-type">
                             Flat
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="edge-type" id="flat" value="flat">
+                        <input class="form-check-input" type="radio" name="edge-type" id="fingers" value="fingers">
                         <label class="form-check-label" for="edge-type">
                             Fingers
                         </label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="edge-type" id="t-slot" value="t-slot">
-                        <label class="form-check-label" for="units">
+                        <label class="form-check-label" for="edge-type">
                             T-slot
                         </label>
                     </div>
@@ -158,7 +158,12 @@
      <canvas id="model_canvas"></canvas>
     </div>
 </div>
-
-<script src="https://threejs.org/build/three.js"></script>
-<script src="js/OrbitControls.js"></script>
-<script src="js/3dmodel.js"></script>
+        <script src="https://threejs.org/build/three.min.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/three-csg.js"></script>
+        <script src="js/geometry.js"></script>
+        <script src="js/flatEdgeModel.js"></script>
+        <script src="js/fingerEdgeModel.js"></script>
+        <script src="js/tslotEdgeModel.js"></script>
+        <script src="js/3dmodel.js"></script>
+        

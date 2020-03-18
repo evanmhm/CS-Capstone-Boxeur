@@ -2,6 +2,16 @@ var clickProjcet = document.getElementById("project");
 console.log(clickProjcet);
 if (clickProjcet) {
 	clickProjcet.addEventListener('click', function() {
+
+        if(document.getElementById("holes-options").classList.contains("d-block") == true){
+            controls.enabled = true;
+            camera.position.x = 120;
+            camera.position.y = 120;
+            camera.position.z = 120;
+            scene.remove(grid);
+            document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
+        }
+
 		document.getElementById("project-options").className = "d-block";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-none";
@@ -21,6 +31,16 @@ var clickDimension = document.getElementById("dimension");
 console.log(clickDimension);
 if (clickDimension) {
 	clickDimension.addEventListener('click', function() {
+
+        if(document.getElementById("holes-options").classList.contains("d-block") == true){
+            controls.enabled = true;
+            camera.position.x = 120;
+            camera.position.y = 120;
+            camera.position.z = 120;
+            scene.remove(grid);
+            document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
+        }
+
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-block";
 		document.getElementById("edge-type-options").className = "d-none";
@@ -33,12 +53,6 @@ if (clickDimension) {
         }
 
         clickDimension.parentElement.className = "active";
-        controls.enabled = true;
-        camera.position.x = 120;
-        camera.position.y = 120;
-        camera.position.z = 120;
-        scene.remove(grid);
-        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -46,6 +60,16 @@ var clickEdge = document.getElementById("edge-type");
 console.log(clickEdge);
 if (clickEdge) {
 	clickEdge.addEventListener('click', function() {
+
+        if(document.getElementById("holes-options").classList.contains("d-block") == true){
+            controls.enabled = true;
+            camera.position.x = 120;
+            camera.position.y = 120;
+            camera.position.z = 120;
+            scene.remove(grid);
+            document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
+        }
+
 		document.getElementById("project-options").className = "d-none";
 		document.getElementById("dimension-options").className = "d-none";
 		document.getElementById("edge-type-options").className = "d-block";
@@ -57,12 +81,6 @@ if (clickEdge) {
             children[i].classList.remove("active");
         }
         clickEdge.parentElement.className = "active";
-        controls.enabled = true;
-        camera.position.x = 120;
-        camera.position.y = 120;
-        camera.position.z = 120;
-        scene.remove(grid);
-        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -98,7 +116,7 @@ if (clickDownload) {
 
         var filename = "boxeur.dxf";
 
-        document.getElementById("editor").addEventListener('mousemove', onCanvasMouseMove, false);
+        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -141,14 +159,14 @@ $("#project-options form").on("input", function() {
 $(function() {
 	var initialValue = 50;
 	$("#slider-width").slider({
-		min: 0.001,
-		max: 150,
+		min: 5.1,
+		max: 100,
 		step: .001,
-		value: 10,
+		value: 50,
 		slide: function(event, ui) {
 			$("#width-value").val(ui.value);
 			boxWidth = ui.value;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -161,19 +179,19 @@ $(function() {
 		} else {
 			$("#slider-width").slider("option", "value", newVal);
 			boxWidth = newVal;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
 	$("#slider-height").slider({
-		min: 0.001,
-		max: 150,
+		min: 5.1,
+		max: 100,
 		step: .001,
-		value: 10,
+		value: 50,
 		slide: function(event, ui) {
 			$("#height-value").val(ui.value);
 			boxHeight = ui.value;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -186,19 +204,19 @@ $(function() {
 		} else {
 			$("#slider-height").slider("option", "value", newVal);
 			boxHeight = newVal;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
 	$("#slider-depth").slider({
-		min: 0.001,
-		max: 150,
+		min: 5.1,
+		max: 100,
 		step: .001,
-		value: 10,
+		value: 50,
 		slide: function(event, ui) {
 			$("#depth-value").val(ui.value);
 			boxDepth = ui.value;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -211,7 +229,7 @@ $(function() {
 		} else {
 			$("#slider-depth").slider("option", "value", newVal);
 			boxDepth = newVal;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 });
