@@ -116,7 +116,7 @@ if (clickDownload) {
 
         var filename = "boxeur.dxf";
 
-        document.getElementById("editor").addEventListener('mousemove', onCanvasMouseMove, false);
+        document.getElementById("editor").removeEventListener('mousemove', onCanvasMouseMove, false);
 	});
 }
 
@@ -162,11 +162,11 @@ $(function() {
 		min: 0.001,
 		max: 150,
 		step: .001,
-		value: 10,
+		value: 50,
 		slide: function(event, ui) {
 			$("#width-value").val(ui.value);
 			boxWidth = ui.value;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -179,7 +179,7 @@ $(function() {
 		} else {
 			$("#slider-width").slider("option", "value", newVal);
 			boxWidth = newVal;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -187,11 +187,11 @@ $(function() {
 		min: 0.001,
 		max: 150,
 		step: .001,
-		value: 10,
+		value: 50,
 		slide: function(event, ui) {
 			$("#height-value").val(ui.value);
 			boxHeight = ui.value;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -204,7 +204,7 @@ $(function() {
 		} else {
 			$("#slider-height").slider("option", "value", newVal);
 			boxHeight = newVal;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -212,11 +212,11 @@ $(function() {
 		min: 0.001,
 		max: 150,
 		step: .001,
-		value: 10,
+		value: 50,
 		slide: function(event, ui) {
 			$("#depth-value").val(ui.value);
 			boxDepth = ui.value;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 
@@ -229,7 +229,7 @@ $(function() {
 		} else {
 			$("#slider-depth").slider("option", "value", newVal);
 			boxDepth = newVal;
-			updateGeometry();
+			updateDimensions(event);
 		}
 	});
 });

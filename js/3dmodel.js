@@ -13,7 +13,7 @@ var edgeType = 0;
 var holesList = []; //Hole list for saving the box
 
 var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
-var boxWidth, boxHeight, boxDepth;
+var boxWidth = 50, boxHeight = 50, boxDepth = 50;
 
 var canvas = document.getElementById("model_canvas").getContext("webgl");
 var canvasDims = document.getElementById("model_canvas").getBoundingClientRect();;
@@ -160,23 +160,27 @@ function edgeTypeHandler(event){
 function updateDimensions(event){
 
 
-	formWidth = document.getElementById("width").value;
-	formHeight = document.getElementById("height").value;
-	formDepth = document.getElementById("depth").value;
+//	boxWidth = document.getElementById("width").value;
+//	boxHeight = document.getElementById("height").value;
+//	boxDepth = document.getElementById("depth").value;
 
 	//Only 2 sides need to be translated depending on what measurement is being changed
+	console.log(event.target.id, boxDepth, boxHeight, boxWidth);
 	switch(event.target.id){
-		case "width":
-			geometryList[edgeType][1].translate((formWidth-lastWidth)/2, 0, 0);
-			geometryList[edgeType][3].translate((-(formWidth-lastWidth))/2, 0, 0);
+		case "slider-width":
+		case "width-value":
+			geometryList[edgeType][1].translate((boxWidth-lastWidth)/2, 0, 0);
+			geometryList[edgeType][3].translate((-(boxWidth-lastWidth))/2, 0, 0);
 			break;
-		case "height":
-			geometryList[edgeType][4].translate(0, (formHeight-lastHeight)/2, 0);
-			geometryList[edgeType][5].translate(0, (-(formHeight-lastHeight))/2, 0);
+		case "slider-height":
+		case "height-value":
+			geometryList[edgeType][4].translate(0, (boxHeight-lastHeight)/2, 0);
+			geometryList[edgeType][5].translate(0, (-(boxHeight-lastHeight))/2, 0);
 			break;
-		case "depth":
-			geometryList[edgeType][0].translate(0, 0, (formDepth-lastDepth)/2);
-			geometryList[edgeType][2].translate(0, 0, (-(formDepth-lastDepth))/2);
+		case "slider-depth":
+		case "depth-value":
+			geometryList[edgeType][0].translate(0, 0, (boxDepth-lastDepth)/2);
+			geometryList[edgeType][2].translate(0, 0, (-(boxDepth-lastDepth))/2);
 			break;
 	}
 	
@@ -184,32 +188,30 @@ function updateDimensions(event){
 	for(var i=0; i<6; i++){
 		switch(i){
 			case 0: //Front
-				geometryList[edgeType][i].scale(formWidth/lastWidth, formHeight/lastHeight, 1);
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
 				break;
 			case 1: //Right
-				geometryList[edgeType][i].scale(1, formHeight/lastHeight, formDepth/lastDepth);
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
 				break;
 			case 2: //Back
-				geometryList[edgeType][i].scale(formWidth/lastWidth, formHeight/lastHeight, 1);
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
 				break;
 			case 3: //Left
-				geometryList[edgeType][i].scale(1, formHeight/lastHeight, formDepth/lastDepth);
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
 				break;
 			case 4: //Top
-				geometryList[edgeType][i].scale(formWidth/lastWidth, 1, formDepth/lastDepth);
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
 				break;
 			case 5: //Bottom
-				geometryList[edgeType][i].scale(formWidth/lastWidth, 1, formDepth/lastDepth);
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
 				break;
 		}
 		geometryList[edgeType][i].verticesNeedUpdate = true;
 	}
 
-	//console.log(event.target.id);
-
-	lastWidth = formWidth;
-	lastHeight = formHeight;
-	lastDepth = formDepth;
+	lastWidth = boxWidth;
+	lastHeight = boxHeight;
+	lastDepth = boxDepth;
 
 }
 
@@ -323,9 +325,9 @@ function onCanvasMouseMove(event){
 
 function setListeners(){
 	//Set listeners for the dimension options
-	document.getElementById("width").addEventListener('input', updateDimensions, false);
-	document.getElementById("height").addEventListener('input', updateDimensions, false);
-	document.getElementById("depth").addEventListener('input', updateDimensions,false);
+	document.getElementById("slider-width").addEventListener('input', updateDimensions, false);
+	document.getElementById("slider-height").addEventListener('input', updateDimensions, false);
+	document.getElementById("slider-depth").addEventListener('input', updateDimensions,false);
 
 	//Set listeners for edge types
 	document.getElementById("flat").addEventListener('click', edgeTypeHandler, false);
