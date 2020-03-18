@@ -13,7 +13,7 @@ var edgeType = 0;
 var holesList = []; //Hole list for saving the box
 
 var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
-var formWidth, formDepth, formHeight;
+var boxWidth, boxHeight, boxDepth;
 
 var canvas = document.getElementById("model_canvas").getContext("webgl");
 var canvasDims = document.getElementById("model_canvas").getBoundingClientRect();;
@@ -39,7 +39,7 @@ function init() {
 	scene.background = new THREE.Color(0xffffff);
 
 	camera = new THREE.OrthographicCamera( 0.3 * width / - 2, 0.3 * width / 2, 0.3 * height / 2, 0.3 * height / - 2, 1, 1000 );
-	
+
 	camera.position.x = 51;
 	camera.position.y = 51;
 	camera.position.z = 51;
@@ -67,7 +67,7 @@ function init() {
 	renderer = new THREE.WebGLRenderer( { antialias: true, canvas: model_canvas } );
 	renderer.setSize(width, height, false);
 
-	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));	
+	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 }
 
 //Animation loop
@@ -235,9 +235,9 @@ function gridPlacer(face){
 	if(scene.getObjectByName('grid') != null){
 		scene.remove(grid);
 	}
-	
+
 	switch(face){
-		case "front": 
+		case "front":
 			grid = new THREE.GridHelper(lastWidth, 10);
 			grid.translateZ(lastDepth/2);
 			grid.rotateX(Math.PI/2);
@@ -352,7 +352,7 @@ class Hole {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		
+
 		this.type = type;
 		this.face = face;
 	}

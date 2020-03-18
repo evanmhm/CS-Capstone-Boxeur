@@ -56,18 +56,33 @@
             </div>
             <div id="dimension-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
-                
-                    <label for="width">Width</label>
-                    <input type="range" name="width" min="1" max="100" value="50" id="width">
+                <div class="form-group pb-1">
+                    <label>Width</label>
+                    <div class="pl-2">
+                        <div class="slider" id="slider-width"></div><br/>
+                        <input id="width-value" type="text">
+                        <span class="unit" style="margin-left:-20px;">in</span>
+                    </div>
+                </div>
 
-                    <br>
-                    <label for="height">Height</label>
-                    <input type="range" name="height" min="1" max="100" value="50" id="height">
+                <div class="form-group pb-1">
+                    <label>Height</label>
+                    <div class="pl-2">
+                        <div class="slider" id="slider-height"></div><br/>
+                        <input id="height-value" type="text">
+                        <span class="unit" style="margin-left:-20px;">in</span>
+                    </div>
+                </div>
 
-                    <br>
-                    <label for="depth">Depth</label>
-                    <input type="range" name="depth" min="1" max="100" value="50" id="depth">
-                
+                <div class="form-group pb-1">
+                    <label>Depth</label>
+                    <div class="pl-2">
+                        <div class="slider" id="slider-depth"></div><br/>
+                        <input id="depth-value" type="text">
+                        <span class="unit" style="margin-left:-20px;">in</span>
+                    </div>
+                </div>
+
             </div>
             <div id="edge-type-options" class="invisible">
                 <!-- this will change based on the mode selected above -->
@@ -138,7 +153,7 @@
 	</div>
 	<!--div class="col-sm-9" id="editor">
 	</div-->
-                    
+
     <div class="col-md-8 col-lg-9" id="editor">
      <canvas id="model_canvas"></canvas>
     </div>
