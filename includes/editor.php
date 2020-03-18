@@ -146,4 +146,9 @@
         <script src="https://threejs.org/build/three.min.js"></script>
         <script src="js/OrbitControls.js"></script>
         <script src="js/three-csg.js"></script>
+        <script src="js/geometry.js"></script>
+        <script src="js/flatEdgeModel.js"></script>
+        <script src="js/fingerEdgeModel.js"></script>
+        <script src="js/tslotEdgeModel.js"></script>
         <script src="js/3dmodel.js"></script>
+        
