@@ -59,7 +59,7 @@
                 <div class="form-group pb-1">
                     <label>Width</label>
                     <div class="pl-2">
-                        <div class="slider" id="slider-width"></div><br/>
+                        <div class="slider" id="slider-width" value=50></div><br/>
                         <input id="width-value" type="text">
                         <span class="unit" style="margin-left:-20px;">in</span>
                     </div>
@@ -68,7 +68,7 @@
                 <div class="form-group pb-1">
                     <label>Height</label>
                     <div class="pl-2">
-                        <div class="slider" id="slider-height"></div><br/>
+                        <div class="slider" id="slider-height" value=50></div><br/>
                         <input id="height-value" type="text">
                         <span class="unit" style="margin-left:-20px;">in</span>
                     </div>
@@ -77,7 +77,7 @@
                 <div class="form-group pb-1">
                     <label>Depth</label>
                     <div class="pl-2">
-                        <div class="slider" id="slider-depth"></div><br/>
+                        <div class="slider" id="slider-depth" value=50></div><br/>
                         <input id="depth-value" type="text">
                         <span class="unit" style="margin-left:-20px;">in</span>
                     </div>

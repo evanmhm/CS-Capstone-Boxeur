@@ -159,8 +159,8 @@ $("#project-options form").on("input", function() {
 $(function() {
 	var initialValue = 50;
 	$("#slider-width").slider({
-		min: 0.001,
-		max: 150,
+		min: 5.1,
+		max: 100,
 		step: .001,
 		value: 50,
 		slide: function(event, ui) {
@@ -184,8 +184,8 @@ $(function() {
 	});
 
 	$("#slider-height").slider({
-		min: 0.001,
-		max: 150,
+		min: 5.1,
+		max: 100,
 		step: .001,
 		value: 50,
 		slide: function(event, ui) {
@@ -209,8 +209,8 @@ $(function() {
 	});
 
 	$("#slider-depth").slider({
-		min: 0.001,
-		max: 150,
+		min: 5.1,
+		max: 100,
 		step: .001,
 		value: 50,
 		slide: function(event, ui) {
