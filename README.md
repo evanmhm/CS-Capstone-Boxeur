@@ -9,6 +9,8 @@ and you can go to it on your browser at http://web.engr.oregonstate.edu/~YOUR_US
 
 To get OAuth working, type `./composer.phar install` which will install google's OAuth tools for php. The ./vendor/ folder will be added with these tools (which is in the .gitignore so it won't be uploaded in commits).
 
+On the first install you will most likely need to run `./permissions.bash` which sets the correct permissions for the site's elements.
+
 # Troubleshoot
 #### 403 Forbidden on a file
 If you ever get 403 Forbidden's in the web console then run `./permissions.bash` which will set all the correct permissions for php, img, js, and css files.
