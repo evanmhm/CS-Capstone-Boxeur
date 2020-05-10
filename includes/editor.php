@@ -46,15 +46,23 @@
                             Milimeters
                         </label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check mb-3">
                         <input class="form-check-input" type="radio" name="units" id="centimeters" value="centimeters">
                         <label class="form-check-label" for="units">
                             Centimeters
                         </label>
                     </div>
+                    <?php if (isset($_SESSION['access_token']) && $_SESSION['access_token']): ?>
+                        <button type="button" class="btn btn-primary mb-2" id="account-save">Save to Account</button>
+                        <br>
+                    <?php endif;?>
+                    <button type="button" class="btn btn-success" id="export">Export to File</button>
+                    <?php if (!isset($_SESSION['access_token']) || !$_SESSION['access_token']): ?>
+                        <p style="color:gray; font-size:11px;">Log in to save to account</p>
+                    <?php endif;?>
                 </form>
             </div>
-            <div id="dimension-options" class="invisible">
+            <div id="dimension-options" class="d-none">
                 <!-- this will change based on the mode selected above -->
                 <div class="form-group pb-1">
                     <label>Width</label>
@@ -84,7 +92,7 @@
                 </div>
 
             </div>
-            <div id="edge-type-options" class="invisible">
+            <div id="edge-type-options" class="d-none">
                 <!-- this will change based on the mode selected above -->
                 <form>
                     <label for="edge-type">Edge Type</label>
@@ -108,7 +116,7 @@
                     </div>
                 </form>
             </div>
-            <div id="holes-options" class="invisible">
+            <div id="holes-options" class="d-none">
                 <!-- this will change based on the mode selected above -->
                 <form>
                 <label for="edge-type">Hole Shape Type</label>
@@ -166,4 +174,3 @@
         <script src="js/fingerEdgeModel.js"></script>
         <script src="js/tslotEdgeModel.js"></script>
         <script src="js/3dmodel.js"></script>
-        

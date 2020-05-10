@@ -58,7 +58,7 @@ function init() {
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
 	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 	testHole = new THREE.Mesh(holeGeometry, holeMaterial);
-	
+
 	scene.add(holeMesh);
 
 	raycaster = new THREE.Raycaster();
@@ -82,7 +82,7 @@ function animate() {
 
 }
 
-//Function to resize canvas when window changes size. 
+//Function to resize canvas when window changes size.
 function onWindowResize(){
 
 	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
@@ -112,7 +112,7 @@ function render(){
 
 			var fixed = intersects[0].point;
 			var fix = new THREE.Vector3(0, 0, 2.5)
-			
+
 			holeMesh.position.copy( fixed.sub(fix) );
 			holeMesh.visible = true;
 
@@ -183,7 +183,7 @@ function updateDimensions(event){
 			geometryList[edgeType][2].translate(0, 0, (-(boxDepth-lastDepth))/2);
 			break;
 	}
-	
+
 	//We want two measurements of each box face to scale, and one to translate, in order to preserve eventual material thickness property
 	for(var i=0; i<6; i++){
 		switch(i){
@@ -215,12 +215,12 @@ function updateDimensions(event){
 
 }
 
-//Function to change camera angle, call grid placement, and set up listener for hole placement helper 
+//Function to change camera angle, call grid placement, and set up listener for hole placement helper
 function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
-	gridPlacer(event.target.id); 
-	
+	gridPlacer(event.target.id);
+
 	if(removeHoleClickListener == true){
 		document.getElementById("model_canvas").removeEventListener('click', helper, false);
 		removeHoleClickListener = false;
@@ -271,7 +271,7 @@ function gridPlacer(face){
 
 	grid.name = "grid";
 	scene.add(grid);
-	
+
 	if(removeMouseListener == true){
 		document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
 		removeMouseListener = false;
@@ -281,7 +281,7 @@ function gridPlacer(face){
 	}
 }
 
-//Helper function to place a hole. 
+//Helper function to place a hole.
 function helper(){
 
 	if(scene.getObjectByName('grid') != null){
@@ -302,11 +302,11 @@ function helper(){
 			testsubtract = threecsg.subtract(meshList[edgeType][0], testHole, newmat);
 			scene.remove(meshList[edgeType][0]);
 			scene.add(testsubtract);
-			
-			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
-			
 
-		} 
+			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
+
+
+		}
 	}
 }
 
@@ -344,7 +344,7 @@ function setListeners(){
 }
 
 
-// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented) 
+// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented)
 // and a list/array of holes, using the hole class below.
 
 //  CODE FOR HOLES OBJECT  //
@@ -359,3 +359,24 @@ class Hole {
 		this.face = face;
 	}
 }
+
+
+// Saving to user's profile
+try {
+	document.getElementById("account-save").addEventListener('click', function() {
+		console.log(window.unit);
+		console.log(window.projectName);
+		console.log(lastWidth);
+		console.log(lastDepth);
+		console.log(lastHeight);
+		console.log(holesList);
+		console.log(edgeType);
+	});
+} catch(e) {
+
+}
+
+// Export to file
+document.getElementById("export").addEventListener('click', function() {
+	console.log("export");
+});
