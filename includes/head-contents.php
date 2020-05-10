@@ -26,3 +26,6 @@ if (!isset($_SESSION)) { session_start(); }
 <link rel="stylesheet" href="css/main.css" type="text/css">
 <link rel="stylesheet" href="css/editor.css" type="text/css">
 <script src="js/main.js"></script>
+
+<!-- meterial icons -->
+<link href = "https://fonts.googleapis.com/icon?family=Material+Icons" rel = "stylesheet">
