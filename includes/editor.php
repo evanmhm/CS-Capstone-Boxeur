@@ -55,6 +55,7 @@
                     <?php if (isset($_SESSION['access_token']) && $_SESSION['access_token']): ?>
                         <button type="button" class="btn btn-primary mb-2" id="account-save">Save to Account</button>
                         <br>
+                        <p style="font-size:12px; color:grey;">Save a project by an existing project's name to update its specifications.</p>
                         <p style="color:red; font-size:12px;" class="d-none" id="save-error">Name project to save</p>
                         <p style="color:green; font-size:12px;" class="d-none" id="save-success">Project saved</p>
                     <?php endif;?>
