@@ -9,6 +9,7 @@ var testsubtract;
 var geometryList = [];
 var meshList = [];
 var edgeType = 0;
+var _face;
 
 var holesList = []; //Hole list for saving the box
 
@@ -54,7 +55,7 @@ function init() {
 		scene.add(meshList[0][i]);
 	}
 
-	holeGeometry = new THREE.BoxGeometry(5, 5, 10);
+	holeGeometry = new THREE.BoxGeometry(5, 5, 15);
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
 	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 	testHole = new THREE.Mesh(holeGeometry, holeMaterial);
@@ -165,22 +166,22 @@ function updateDimensions(event){
 //	boxDepth = document.getElementById("depth").value;
 
 	//Only 2 sides need to be translated depending on what measurement is being changed
-	console.log(event.target.id, boxDepth, boxHeight, boxWidth);
+	//console.log(event.target.id, boxDepth, boxHeight, boxWidth);
 	switch(event.target.id){
 		case "slider-width":
 		case "width-value":
-			geometryList[edgeType][1].translate((boxWidth-lastWidth)/2, 0, 0);
-			geometryList[edgeType][3].translate((-(boxWidth-lastWidth))/2, 0, 0);
+			meshList[edgeType][1].geometry.translate((boxWidth-lastWidth)/2, 0, 0);
+			meshList[edgeType][3].geometry.translate((-(boxWidth-lastWidth))/2, 0, 0);
 			break;
 		case "slider-height":
 		case "height-value":
-			geometryList[edgeType][4].translate(0, (boxHeight-lastHeight)/2, 0);
-			geometryList[edgeType][5].translate(0, (-(boxHeight-lastHeight))/2, 0);
+			meshList[edgeType][4].geometry.translate(0, (boxHeight-lastHeight)/2, 0);
+			meshList[edgeType][5].geometry.translate(0, (-(boxHeight-lastHeight))/2, 0);
 			break;
 		case "slider-depth":
 		case "depth-value":
-			geometryList[edgeType][0].translate(0, 0, (boxDepth-lastDepth)/2);
-			geometryList[edgeType][2].translate(0, 0, (-(boxDepth-lastDepth))/2);
+			meshList[edgeType][0].geometry.translate(0, 0, (boxDepth-lastDepth)/2);
+			meshList[edgeType][2].geometry.translate(0, 0, (-(boxDepth-lastDepth))/2);
 			break;
 	}
 	
@@ -188,25 +189,25 @@ function updateDimensions(event){
 	for(var i=0; i<6; i++){
 		switch(i){
 			case 0: //Front
-				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				meshList[edgeType][i].geometry.scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
 				break;
 			case 1: //Right
-				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				meshList[edgeType][i].geometry.scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
 				break;
 			case 2: //Back
-				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				meshList[edgeType][i].geometry.scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
 				break;
 			case 3: //Left
-				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				meshList[edgeType][i].geometry.scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
 				break;
 			case 4: //Top
-				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				meshList[edgeType][i].geometry.scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
 				break;
 			case 5: //Bottom
-				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				meshList[edgeType][i].geometry.scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
 				break;
 		}
-		geometryList[edgeType][i].verticesNeedUpdate = true;
+		meshList[edgeType][i].geometry.verticesNeedUpdate = true;
 	}
 
 	lastWidth = boxWidth;
@@ -243,29 +244,43 @@ function gridPlacer(face){
 			grid = new THREE.GridHelper(lastWidth, 10);
 			grid.translateZ(lastDepth/2);
 			grid.rotateX(Math.PI/2);
+			_face = 0;
 			break;
 		case "back":
 			grid = new THREE.GridHelper(lastWidth, 10);
 			grid.translateZ(-lastDepth/2);
 			grid.rotateX(Math.PI/2);
+			_face = 2;
 			break;
 		case "top":
 			grid = new THREE.GridHelper(lastHeight, 10);
 			grid.translateY(lastHeight/2);
+			_face = 4;
+			testHole.rotateX(Math.PI/2);
+			holeMesh.rotateX(Math.PI/2);
 			break;
 		case "bottom":
 			grid = new THREE.GridHelper(lastHeight, 10);
 			grid.translateY(-lastHeight/2);
+			_face = 5;
+			testHole.rotateX(Math.PI/2);
+			holeMesh.rotateX(Math.PI/2);
 			break;
 		case "right":
 			grid = new THREE.GridHelper(lastDepth, 10);
 			grid.translateX(lastWidth/2);
 			grid.rotateZ(Math.PI/2);
+			_face = 1;
+			testHole.rotateZ(Math.PI/2);
+			holeMesh.rotateY(Math.PI/2);
 			break;
 		case "left":
 			grid = new THREE.GridHelper(lastDepth, 10);
 			grid.translateX(-lastWidth/2);
 			grid.rotateZ(Math.PI/2);
+			_face = 3;
+			testHole.rotateZ(Math.PI/2);
+			holeMesh.rotateY(Math.PI/2);
 			break;
 	}
 
@@ -299,9 +314,10 @@ function helper(){
 			testHole.translateZ(intpoint.z);
 
 			var newmat = new THREE.MeshBasicMaterial({ color: 0xff0000, vertexColors: THREE.FaceColors });
-			testsubtract = threecsg.subtract(meshList[edgeType][0], testHole, newmat);
-			scene.remove(meshList[edgeType][0]);
+			testsubtract = threecsg.subtract(meshList[edgeType][_face], testHole, newmat);
+			scene.remove(meshList[edgeType][_face]);
 			scene.add(testsubtract);
+			meshList[edgeType][_face] = testsubtract;
 			
 			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
 			
