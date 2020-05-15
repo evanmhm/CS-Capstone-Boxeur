@@ -16,12 +16,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="library.php">Library</a>
             </li>
-            <li class="search-wrapper" href="../css/editor.css">
+            <!-- <li class="search-wrapper" href="../css/editor.css">
               <form action="library.php">
                 <input type="text" placeholder="Search Proejct.." name="search">
                 <button type="submit"><i class="fa fa-search"></i></button>
               </form>
-            </li>
+            </li> -->
             <?php endif;?>
             <?php if (!isset($_SESSION['access_token']) || !$_SESSION['access_token']): ?>
                 <li class="nav-item">
