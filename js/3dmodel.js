@@ -26,6 +26,8 @@ var mouse = new THREE.Vector2();
 var removeMouseListener = false;
 var removeHoleClickListener = false;
 
+var saveError = false;
+
 init();
 
 setListeners();
@@ -364,13 +366,37 @@ class Hole {
 // Saving to user's profile
 try {
 	document.getElementById("account-save").addEventListener('click', function() {
-		console.log(window.unit);
-		console.log(window.projectName);
-		console.log(lastWidth);
-		console.log(lastDepth);
-		console.log(lastHeight);
-		console.log(holesList);
-		console.log(edgeType);
+		// console.log(window.unit);
+		// console.log(window.projectName);
+		// console.log(lastWidth);
+		// console.log(lastDepth);
+		// console.log(lastHeight);
+		// console.log(JSON.stringify(holesList));
+		// console.log(edgeType);
+
+		// make sure theres a project name
+		if (window.projectName == ""){
+			$("#save-error").removeClass("d-none");
+		} else {
+			if ($("#save-error").attr('class') == ""){
+				$("#save-error").addClass("d-none");
+			}
+			// make POST request to backend
+			$.post("saveproject.php", {
+				name: window.projectName,
+				unit: window.unit,
+				height: lastHeight,
+				width: lastWidth,
+				depth: lastDepth,
+				edgeType: edgeType,
+				holes: JSON.stringify(holesList),
+			}, function(data,status){
+				console.log(status);
+				$("#save-success").removeClass("d-none");
+		        setTimeout(function(){ $("#save-success").addClass("d-none"); }, 3000);
+			});
+		}
+
 	});
 } catch(e) {
 

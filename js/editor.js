@@ -159,7 +159,6 @@ $("#project-options form").on("input", function() {
 		});
 	}
 	projectName = $("#project-options input").val();
-	console.log(projectName);
 });
 
 // HWD sliders
