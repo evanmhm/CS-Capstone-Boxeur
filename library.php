@@ -65,7 +65,7 @@
 <div class="container">
     <h1 id="library-title">Library</h1>
 	<div class="row" id="library-row">
-		<?php foreach ($projects as $project): ?>
+		<?php foreach ($projects as $index=>$project): ?>
 	        <div class="col-4 card-col">
 	            <div class="card" style="width: 18rem;">
 	              <div class="card-body">
@@ -77,7 +77,7 @@
 								<li>Depth: <?= $project['depth']?> <?= $project['unit']?></li>
 							</ul>
 						</p>
-	                <a href="#" class="btn btn-primary">Continue Project</a>
+	                <a class="btn btn-primary" id="cont-<?= $index?>">Continue Project</a>
 	                <button class="btnDelete btn-delete">
 	                  <mdb-icon fas icon = "heart"> </mdb-icon>
 	                  <i class = "material-icons">delete</i>
@@ -85,6 +85,19 @@
 	              </div>
 	            </div>
 	        </div>
+			<script type="text/javascript">
+				document.getElementById("cont-<?= $index?>").addEventListener('click', function() {
+					sessionStorage.load = 'true';
+					sessionStorage.name = "<?= $project['name']?>";
+					sessionStorage.width = <?= $project['width']?>;
+					sessionStorage.height = <?= $project['height']?>;
+					sessionStorage.depth = <?= $project['depth']?>;
+					sessionStorage.unit = "<?= $project['unit']?>";
+					sessionStorage.edgeType = <?= $project['edgeType']?>;
+					sessionStorage.holes = "<?= $project['holes']?>";
+					window.location.href = "editor.php";
+				});
+			</script>
 		<?php endforeach; ?>
 		<div class="col-4">
 			<a href="editor.php">

@@ -31,7 +31,7 @@
                 <form>
                     <div class="form-group">
                         <label for="name">Project name</label>
-                        <input class="form-control" type="text" name="name" aria-describedby="naem" placeholder="Enter name">
+                        <input id="name-input" class="form-control" type="text" name="name" aria-describedby="naem" placeholder="Enter name">
                     </div>
                     <label for="units">Project units</label>
                     <div class="form-check">

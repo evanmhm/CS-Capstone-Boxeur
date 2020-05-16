@@ -36,7 +36,6 @@ animate();
 
 //Set up variables, scene and renderer elements.
 function init() {
-
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xffffff);
 
@@ -71,6 +70,37 @@ function init() {
 
 	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 }
+
+function checkLoad() {
+	// if the session variables are set to load a saved project
+	if (sessionStorage.load == "true") {
+		// get project vars from session storage
+		load_name = sessionStorage.name;
+		load_unit = sessionStorage.unit;
+		load_width = parseFloat(sessionStorage.width);
+		load_height = parseFloat(sessionStorage.height);
+		load_depth = parseFloat(sessionStorage.depth);
+		load_edgeType = parseInt(sessionStorage.edgeType);
+		load_holes = JSON.parse(sessionStorage.holes);
+		// clear storage
+		sessionStorage.clear();
+
+		// set project values in input boxes
+		window.projectName = load_name;
+		$("#name-input").val(load_name);
+		$("#height-value").val(load_height);
+		$("#width-value").val(load_width);
+		$("#depth-value").val(load_depth);
+
+		$("#slider-height").slider('value',load_height);
+		$("#slider-width").slider('value',load_width);
+		$("#slider-depth").slider('value',load_depth);
+
+		loadDimensions(load_height, load_width, load_depth);
+	}
+}
+
+
 
 //Animation loop
 function animate() {
@@ -215,6 +245,53 @@ function updateDimensions(event){
 	lastHeight = boxHeight;
 	lastDepth = boxDepth;
 
+}
+
+//Change box geometry based on form values when a slider is being input or if a value is entered into the form.
+//Really need to think of a more elegant way to do each face other than a switch.
+function loadDimensions(h, w, d){
+	boxHeight = h;
+	boxWidth = w;
+	boxDepth = d;
+
+	//resize box to new dimensions
+	geometryList[edgeType][1].translate((boxWidth-lastWidth)/2, 0, 0);
+	geometryList[edgeType][3].translate((-(boxWidth-lastWidth))/2, 0, 0);
+
+	geometryList[edgeType][4].translate(0, (boxHeight-lastHeight)/2, 0);
+	geometryList[edgeType][5].translate(0, (-(boxHeight-lastHeight))/2, 0);
+
+	geometryList[edgeType][0].translate(0, 0, (boxDepth-lastDepth)/2);
+	geometryList[edgeType][2].translate(0, 0, (-(boxDepth-lastDepth))/2);
+
+	//We want two measurements of each box face to scale, and one to translate, in order to preserve eventual material thickness property
+	for(var i=0; i<6; i++){
+		switch(i){
+			case 0: //Front
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				break;
+			case 1: //Right
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				break;
+			case 2: //Back
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				break;
+			case 3: //Left
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				break;
+			case 4: //Top
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				break;
+			case 5: //Bottom
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				break;
+		}
+		geometryList[edgeType][i].verticesNeedUpdate = true;
+	}
+
+	lastWidth = boxWidth;
+	lastHeight = boxHeight;
+	lastDepth = boxDepth;
 }
 
 //Function to change camera angle, call grid placement, and set up listener for hole placement helper
