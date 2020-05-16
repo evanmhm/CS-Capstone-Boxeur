@@ -1,5 +1,5 @@
 # CS-Capstone-Boxeur
-OSU CS46X group 35 project repo, Boxeur case designer. Implemented in PHP, JS, CSS, and HTML this online tool allows users to create cases of different specifications to be exported for 3D printing or laser cutting. 
+OSU CS46X group 35 project repo, Boxeur case designer. Implemented in PHP, JS, CSS, and HTML this online tool allows users to create cases of different specifications to be exported for 3D printing or laser cutting.
 
 # Development
 To get the site running on the OSU server, first ssh into the server (`ssh YOUR_USERNAME@flip.engr.oregonstate.edu`).
@@ -21,6 +21,8 @@ If you would like to run the project on your local machine (which is untested), 
 [Design document](/docs/Design_Document.pdf)
 
 [Code review summary and response](/docs/CodeReviewChanges.pdf)
+
+[Feedback from the code review](/docs/AllCodeReviewFeedback.pdf)
 
 
 # Troubleshoot
