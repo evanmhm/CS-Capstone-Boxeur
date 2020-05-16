@@ -111,7 +111,7 @@
 					sessionStorage.depth = <?= $project['depth']?>;
 					sessionStorage.unit = "<?= $project['unit']?>";
 					sessionStorage.edgeType = <?= $project['edgeType']?>;
-					sessionStorage.holes = "<?= $project['holes']?>";
+					sessionStorage.holes = '<?= $project['holes']?>';
 					window.location.href = "editor.php";
 				});
 

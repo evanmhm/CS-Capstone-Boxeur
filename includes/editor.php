@@ -122,17 +122,19 @@
             <div id="holes-options" class="d-none">
                 <!-- this will change based on the mode selected above -->
                 <form>
+                <button type="button" id="front">Front</button>
+                <button type="button" id="top">Top</button>
+                <button type="button" id="right">Right</button>
+                <button type="button" id="left">Left</button>
+                <button type="button" id="bottom">Bottom</button>
+                <button type="button" id="back">Back</button>
+                <p style="font-size:12px; color:grey;">Select a face to place a hole on.</p>
+
                 <label for="edge-type">Hole Shape Type</label>
                     <div class="form-check">
                         <input id="rect" class="form-check-input" type="radio" name="shape-type" id="rectangle" value="rectangle" checked>
                         <label class="form-check-label" for="shape-type">
                             Rectangle
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input id="triangle" class="form-check-input" type="radio" name="shape-type" id="triangle" value="triangle">
-                        <label class="form-check-label" for="shape-type">
-                            Triangle
                         </label>
                     </div>
                     <div class="form-check">
@@ -151,13 +153,10 @@
                             <input id="hole-height" class="form-control" type="number" min="0" name="shape-height" aria-describedby="shape-height" placeholder="Height">
                         </div>
                     </div>
+                    <p style="font-size:12px; color:grey;">After choosing a hole shape, input the desired size of hole then click the shape agian to update the size.
+                        Next, place the hole on the case by hovering over the case on the right and clicking in the desired spot. </p>
 
-                    <button type="button" id="front">Front</button>
-                    <button type="button" id="top">Top</button>
-                    <button type="button" id="right">Right</button>
-                    <button type="button" id="left">Left</button>
-                    <button type="button" id="bottom">Bottom</button>
-                    <button type="button" id="back">Back</button>
+
                 </form>
             </div>
         </div>

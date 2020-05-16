@@ -17,6 +17,7 @@ var holesList = []; //Hole list for saving the box
 var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
 var boxWidth = 50, boxHeight = 50, boxDepth = 50;
 
+var lastHoleType = "rect";
 var holewidth = 5, holeheight = 5;
 
 var thickness = 5;
@@ -94,8 +95,9 @@ function init() {
 	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 }
 
+// checks to see if the session variables are set to load a saved project
 function checkLoad() {
-	// if the session variables are set to load a saved project
+	// if the session variables are set
 	if (sessionStorage.load == "true") {
 		// get project vars from session storage
 		load_name = sessionStorage.name;
@@ -110,20 +112,28 @@ function checkLoad() {
 
 		// set project values in input boxes
 		window.projectName = load_name;
+		window.unit = load_unit;
 		$("#name-input").val(load_name);
 		$("#height-value").val(load_height);
 		$("#width-value").val(load_width);
 		$("#depth-value").val(load_depth);
+		if (load_unit == "mm") {
+			document.getElementById('milimeters').checked = true;
+		}
+		if (load_unit == "cm") {
+			document.getElementById('centimeters').checked = true;
+		}
+
+		$("#project-options form").trigger("input");
 
 		$("#slider-height").slider('value',load_height);
 		$("#slider-width").slider('value',load_width);
 		$("#slider-depth").slider('value',load_depth);
 
 		loadDimensions(load_height, load_width, load_depth);
+		loadHoles(load_holes);
 	}
 }
-
-
 
 //Animation loop
 function animate() {
@@ -166,7 +176,7 @@ function render(){
 		if ( intersects.length > 0 ) {
 
 			var fixed = intersects[0].point;
-			
+
 			holeMesh.position.copy( fixed );
 			holeMesh.visible = true;
 
@@ -195,7 +205,7 @@ function render(){
 //
 
 
-//Function to change edge types 
+//Function to change edge types
 // *** NYI ***
 function edgeTypeHandler(event){
 
@@ -212,7 +222,7 @@ function edgeTypeHandler(event){
 //Function for changing the hole shape
 function holeType(event){
 
-	scene.remove(holeMesh);	
+	scene.remove(holeMesh);
 
 	holeMesh.quaternion.set(0, 0, 0, 0);
 
@@ -221,6 +231,7 @@ function holeType(event){
 			holeGeometry = new THREE.BoxGeometry(holewidth, thickness*2, holeheight);
 			holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 			scene.add(holeMesh);
+			lastHoleType = "rect";
 			break;
 		case "triangle":
 			break;
@@ -228,25 +239,26 @@ function holeType(event){
 			holeGeometry = new THREE.CylinderGeometry(holewidth, holewidth, thickness*2, 30);
 			holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 			scene.add(holeMesh);
+			lastHoleType = "circle";
 			break;
 		default:
 			break;
 	}
 
 	switch(_face){
-		case 0: 
+		case 0:
 			holeMesh.rotateX(Math.PI/2);
 			break;
-		case 1: 
+		case 1:
 			holeMesh.rotateZ(Math.PI/2);
 			break;
-		case 2: 
+		case 2:
 			holeMesh.rotateX(Math.PI/2);
 			break;
-		case 3: 
+		case 3:
 			holeMesh.rotateZ(Math.PI/2);
 			break;
-		case 4: 
+		case 4:
 		case 5: 		//Top and bottom faces don't need any rotations
 			break;
 	}
@@ -322,8 +334,7 @@ function updateDimensions(event){
 
 }
 
-//Change box geometry based on form values when a slider is being input or if a value is entered into the form.
-//Really need to think of a more elegant way to do each face other than a switch.
+// Load dimensions and resize box
 function loadDimensions(h, w, d){
 	boxHeight = h;
 	boxWidth = w;
@@ -369,12 +380,71 @@ function loadDimensions(h, w, d){
 	lastDepth = boxDepth;
 }
 
+// cuts holes from a saved list of holes
+function loadHoles(holes) {
+	holesList = holes;
+	holesList.forEach(function(hole) {
+		scene.remove(holeMesh);
+		holeMesh.quaternion.set(0, 0, 0, 0);
+
+		switch(hole['type']){
+			case "rect":
+				holeGeometry = new THREE.BoxGeometry(hole['width'], thickness*2, hole['height']);
+				holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
+				scene.add(holeMesh);
+				break;
+			case "triangle":
+				break;
+			case "circle":
+				holeGeometry = new THREE.CylinderGeometry(hole['width'], hole['width'], thickness*2, 30);
+				holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
+				scene.add(holeMesh);
+				break;
+			default:
+				break;
+		}
+
+		switch(hole['face']){
+			case 0:
+				holeMesh.rotateX(Math.PI/2);
+				break;
+			case 1:
+				holeMesh.rotateZ(Math.PI/2);
+				break;
+			case 2:
+				holeMesh.rotateX(Math.PI/2);
+				break;
+			case 3:
+				holeMesh.rotateZ(Math.PI/2);
+				break;
+			case 4:
+			case 5: 		//Top and bottom faces don't need any rotations
+				break;
+		}
+ 		pos = new THREE.Vector3(hole['x'], hole['y'], hole['z']);
+		holeMesh.position.copy( pos );
+
+
+		var newmat = new THREE.MeshBasicMaterial({ color: faceColors[hole['face']], vertexColors: THREE.FaceColors });
+		subtract = threecsg.subtract(meshList[edgeType][hole['face']], holeMesh, newmat);
+		scene.remove(meshList[edgeType][hole['face']]);
+		//scene.remove(outlineList[_face]);
+
+		/*outlineList[_face] = new THREE.Mesh(subtract, outlinemat);
+		outlineList[_face].scale.multiplyScalar(1.5);*/
+
+		scene.add(subtract);
+		//scene.add(outlineList[_face]);
+		meshList[edgeType][hole['face']] = subtract;
+	});
+}
+
 //Function to change camera angle, call grid placement, and set up listener for hole placement helper
 function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
-	gridPlacer(event.target.id); 
-	
+	gridPlacer(event.target.id);
+
 	document.getElementById("model_canvas").addEventListener('click', helper, false);
 	//Though this helped prevent duplicate listeners, this caused a bug for not registering hole placement clicks on every other face button click
 	/*if(removeHoleClickListener == true){
@@ -460,6 +530,7 @@ function helper(){
 		if ( intersects.length > 0 ) {
 
 			var intpoint = intersects[0].point;
+			console.log(intpoint);
 
 			/***** These lines will move the hole to a desired position, just change intpoint to a (new THREE.Vector3(x, y, z)) with the desired coordinates *****/
 			/*holeMesh.translateX(intpoint.x);
@@ -477,10 +548,14 @@ function helper(){
 			scene.add(subtract);
 			//scene.add(outlineList[_face]);
 			meshList[edgeType][_face] = subtract;
-			
+
 			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
-
-
+			if (lastHoleType == "rect"){
+				holesList.push({type: lastHoleType, x:intpoint.x, y:intpoint.y, z:intpoint.z, face:_face, width:holewidth, height:holeheight})
+			}
+			if (lastHoleType == "circle"){
+				holesList.push({type: lastHoleType, x:intpoint.x, y:intpoint.y, z:intpoint.z, face:_face, width:holewidth})
+			}
 		}
 	}
 }
@@ -514,7 +589,6 @@ function setListeners(){
 
 	//Set listeners for hole options
 	document.getElementById("rect").addEventListener('click', holeType, false);
-	document.getElementById("triangle").addEventListener('click', holeType, false);
 	document.getElementById("circle").addEventListener('click', holeType, false);
 	document.getElementById("hole-width").addEventListener('input', function(){
 		holewidth = document.getElementById("hole-width").value;
@@ -531,7 +605,6 @@ function setListeners(){
 	document.getElementById("right").addEventListener('click', function(e){holePlacement(e, 51, 0, 0)}, false);
 	document.getElementById("left").addEventListener('click', function(e){holePlacement(e, -51, 0, 0)}, false);
 }
-
 
 // When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented)
 // and a list/array of holes, using the hole class below.
@@ -551,7 +624,6 @@ class Hole {
 		this.height = height;
 	}
 }
-
 
 // Saving to user's profile
 try {
