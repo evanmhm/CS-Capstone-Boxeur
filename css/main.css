@@ -141,16 +141,25 @@ nav {
     letter-spacing: .25px;
     cursor: pointer;
     border: 0px;
-    margin-left:40px;
+    margin-left: 70px;
 }
 
 .card-col {
     margin-top: 40px;
 }
 
+.card-hr {
+    width: 90%;
+    margin: 0;
+}
+
 .specs-list {
     list-style: none;
     padding-left: 15px;
+}
+
+.cont-btn {
+    color: white !important;
 }
 
 #library-row {

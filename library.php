@@ -42,45 +42,62 @@
 		        $row = mysqli_fetch_assoc($result);
 		        $user =  $row['id'];
 
-				// Get all the projects that the user owns and append to projects array
-				$sql = 'SELECT * FROM projects WHERE user ="'. $user. '"';
-				$result = $conn->query($sql);
-				if ($result->num_rows > 0) {
-				    while($row = $result->fetch_assoc()) {
-				        $response['name'] = $row["name"];
-				        $response['width'] = $row["width"];
-				        $response['height'] = $row["height"];
-				        $response['depth'] = $row["depth"];
-				        $response['unit'] = $row["unit"];
-				        $response['edgeType'] = $row["edgeType"];
-				        $response['holes'] = $row["holes"];
-						array_push($projects, $response);
-				    }
+				if (isset($_POST['del'])) {
+					if($_POST['del'] == 1) {
+						$proj_id = $_POST['id'];
+						$sql = "DELETE FROM projects WHERE id='$proj_id' AND user='$user' ";
+
+						if ($conn->query($sql) === TRUE) {
+							echo "Record deleted successfully";
+						} else {
+							echo "Error deleting record: " . $conn->error;
+						}
+					}
+				} else {
+					// Get all the projects that the user owns and append to projects array
+					$sql = 'SELECT * FROM projects WHERE user ="'. $user. '"';
+					$result = $conn->query($sql);
+					if ($result->num_rows > 0) {
+					    while($row = $result->fetch_assoc()) {
+					        $response['id'] = $row["id"];
+					        $response['name'] = $row["name"];
+					        $response['width'] = $row["width"];
+					        $response['height'] = $row["height"];
+					        $response['depth'] = $row["depth"];
+					        $response['unit'] = $row["unit"];
+					        $response['edgeType'] = $row["edgeType"];
+					        $response['holes'] = $row["holes"];
+							array_push($projects, $response);
+					    }
+					}
 				}
 		    }
-			// print_r($projects);
+			$conn->close();
 		}
 	?>
+	<?php if (!isset($_SESSION['access_token']) || !$_SESSION['access_token']): ?>
+		<script>window.location = 'index.php';</script>
+	<?php endif;?>
 
 <div class="container">
     <h1 id="library-title">Library</h1>
 	<div class="row" id="library-row">
 		<?php foreach ($projects as $index=>$project): ?>
-	        <div class="col-4 card-col">
+	        <div class="col-md-6 col-lg-4 card-col">
 	            <div class="card" style="width: 18rem;">
 	              <div class="card-body">
-	                <h5 class="card-title"><?= $project['name']?></h5>
-		                <p class="card-text">
-							<ul class="specs-list">
-								<li>Width: <?= $project['width']?> <?= $project['unit']?></li>
-								<li>Height: <?= $project['height']?> <?= $project['unit']?></li>
-								<li>Depth: <?= $project['depth']?> <?= $project['unit']?></li>
-							</ul>
-						</p>
-	                <a class="btn btn-primary" id="cont-<?= $index?>">Continue Project</a>
-	                <button class="btnDelete btn-delete">
-	                  <mdb-icon fas icon = "heart"> </mdb-icon>
-	                  <i class = "material-icons">delete</i>
+	                <h5 class="card-title" style="font-weight: bold;"><?= $project['name']?></h5>
+					<hr class="card-hr">
+	                <p class="card-text">
+						<ul class="specs-list">
+							<li>Width: <?= $project['width']?> <?= $project['unit']?></li>
+							<li>Height: <?= $project['height']?> <?= $project['unit']?></li>
+							<li>Depth: <?= $project['depth']?> <?= $project['unit']?></li>
+						</ul>
+					</p>
+					<a class="btn btn-primary cont-btn" id="cont-<?= $index?>">Continue Project</a>
+	                <button class="btnDelete btn-delete" id="del-<?= $index?>">
+						<i class="fa fa-trash-o fa-lg"></i>
 	                </button>
 	              </div>
 	            </div>
@@ -97,9 +114,19 @@
 					sessionStorage.holes = "<?= $project['holes']?>";
 					window.location.href = "editor.php";
 				});
+
+				document.getElementById("del-<?= $index?>").addEventListener('click', function() {
+					$.ajax({
+					    url: 'library.php',
+					    type: "POST",
+					    data: { del: 1, id: <?= $project['id']?> }
+					}).done(function( msg ) {
+					    window.location = 'library.php';
+					});
+				});
 			</script>
 		<?php endforeach; ?>
-		<div class="col-4">
+		<div class="col-md-6 col-lg-4" style="padding-top:40px;">
 			<a href="editor.php">
 				<image class="add" href="../css/editor.css" src="img/add.png" align="middle">
 			</a>
