@@ -1,6 +1,7 @@
 var unit = "in"
 var projectName = ""
 var clickProjcet = document.getElementById("project");
+
 console.log(clickProjcet);
 if (clickProjcet) {
 	clickProjcet.addEventListener('click', function() {
@@ -238,4 +239,6 @@ $(function() {
 			updateDimensions(event);
 		}
 	});
+
+	checkLoad();
 });
