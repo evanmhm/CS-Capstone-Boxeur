@@ -32,6 +32,8 @@ var mouse = new THREE.Vector2();
 var removeMouseListener = false;
 var removeHoleClickListener = false;
 
+var saveError = false;
+
 init();
 
 setListeners();
@@ -40,7 +42,6 @@ animate();
 
 //Set up variables, scene and renderer elements.
 function init() {
-
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xffffff);
 
@@ -93,6 +94,37 @@ function init() {
 	controls = new THREE.OrbitControls(camera, document.getElementById("model_canvas"));
 }
 
+function checkLoad() {
+	// if the session variables are set to load a saved project
+	if (sessionStorage.load == "true") {
+		// get project vars from session storage
+		load_name = sessionStorage.name;
+		load_unit = sessionStorage.unit;
+		load_width = parseFloat(sessionStorage.width);
+		load_height = parseFloat(sessionStorage.height);
+		load_depth = parseFloat(sessionStorage.depth);
+		load_edgeType = parseInt(sessionStorage.edgeType);
+		load_holes = JSON.parse(sessionStorage.holes);
+		// clear storage
+		sessionStorage.clear();
+
+		// set project values in input boxes
+		window.projectName = load_name;
+		$("#name-input").val(load_name);
+		$("#height-value").val(load_height);
+		$("#width-value").val(load_width);
+		$("#depth-value").val(load_depth);
+
+		$("#slider-height").slider('value',load_height);
+		$("#slider-width").slider('value',load_width);
+		$("#slider-depth").slider('value',load_depth);
+
+		loadDimensions(load_height, load_width, load_depth);
+	}
+}
+
+
+
 //Animation loop
 function animate() {
 
@@ -105,7 +137,7 @@ function animate() {
 
 }
 
-//Function to resize canvas when window changes size. 
+//Function to resize canvas when window changes size.
 function onWindowResize(){
 
 	canvasDims = document.getElementById("model_canvas").getBoundingClientRect();
@@ -251,7 +283,7 @@ function updateDimensions(event){
 			outlineList[2].geometry.translate(0, 0, (-(boxDepth-lastDepth))/2);*/
 			break;
 	}
-	
+
 	//We want two measurements of each box face to scale, and one to translate, in order to preserve eventual material thickness property
 	for(var i=0; i<6; i++){
 		switch(i){
@@ -290,7 +322,54 @@ function updateDimensions(event){
 
 }
 
-//Function to change camera angle, call grid placement, and set up listener for hole placement helper 
+//Change box geometry based on form values when a slider is being input or if a value is entered into the form.
+//Really need to think of a more elegant way to do each face other than a switch.
+function loadDimensions(h, w, d){
+	boxHeight = h;
+	boxWidth = w;
+	boxDepth = d;
+
+	//resize box to new dimensions
+	geometryList[edgeType][1].translate((boxWidth-lastWidth)/2, 0, 0);
+	geometryList[edgeType][3].translate((-(boxWidth-lastWidth))/2, 0, 0);
+
+	geometryList[edgeType][4].translate(0, (boxHeight-lastHeight)/2, 0);
+	geometryList[edgeType][5].translate(0, (-(boxHeight-lastHeight))/2, 0);
+
+	geometryList[edgeType][0].translate(0, 0, (boxDepth-lastDepth)/2);
+	geometryList[edgeType][2].translate(0, 0, (-(boxDepth-lastDepth))/2);
+
+	//We want two measurements of each box face to scale, and one to translate, in order to preserve eventual material thickness property
+	for(var i=0; i<6; i++){
+		switch(i){
+			case 0: //Front
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				break;
+			case 1: //Right
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				break;
+			case 2: //Back
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, boxHeight/lastHeight, 1);
+				break;
+			case 3: //Left
+				geometryList[edgeType][i].scale(1, boxHeight/lastHeight, boxDepth/lastDepth);
+				break;
+			case 4: //Top
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				break;
+			case 5: //Bottom
+				geometryList[edgeType][i].scale(boxWidth/lastWidth, 1, boxDepth/lastDepth);
+				break;
+		}
+		geometryList[edgeType][i].verticesNeedUpdate = true;
+	}
+
+	lastWidth = boxWidth;
+	lastHeight = boxHeight;
+	lastDepth = boxDepth;
+}
+
+//Function to change camera angle, call grid placement, and set up listener for hole placement helper
 function holePlacement(event, x, y, z){
 
 	camera.position.x = x; camera.position.y = y; camera.position.z = z;
@@ -360,7 +439,7 @@ function gridPlacer(face){
 
 	grid.name = "grid";
 	scene.add(grid);
-	
+
 	if(removeMouseListener == true){
 		document.getElementById("model_canvas").removeEventListener('mousemove', onCanvasMouseMove, false);
 		removeMouseListener = false;
@@ -370,7 +449,7 @@ function gridPlacer(face){
 	}
 }
 
-//Helper function to place a hole. 
+//Helper function to place a hole.
 function helper(){
 
 	if(scene.getObjectByName('grid') != null){
@@ -400,9 +479,9 @@ function helper(){
 			meshList[edgeType][_face] = subtract;
 			
 			/*  SAVE HOLE OBJECTS HERE, THIS IS WHERE HOLE PLACEMENT OCCURS */
-			
 
-		} 
+
+		}
 	}
 }
 
@@ -454,7 +533,7 @@ function setListeners(){
 }
 
 
-// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented) 
+// When saving the data for the entire object, you'll need the size of the object itself, edge type (not currently implemented)
 // and a list/array of holes, using the hole class below.
 
 //  CODE FOR HOLES OBJECT  //
@@ -472,3 +551,48 @@ class Hole {
 		this.height = height;
 	}
 }
+
+
+// Saving to user's profile
+try {
+	document.getElementById("account-save").addEventListener('click', function() {
+		// console.log(window.unit);
+		// console.log(window.projectName);
+		// console.log(lastWidth);
+		// console.log(lastDepth);
+		// console.log(lastHeight);
+		// console.log(JSON.stringify(holesList));
+		// console.log(edgeType);
+
+		// make sure theres a project name
+		if (window.projectName == ""){
+			$("#save-error").removeClass("d-none");
+		} else {
+			if ($("#save-error").attr('class') == ""){
+				$("#save-error").addClass("d-none");
+			}
+			// make POST request to backend
+			$.post("saveproject.php", {
+				name: window.projectName,
+				unit: window.unit,
+				height: lastHeight,
+				width: lastWidth,
+				depth: lastDepth,
+				edgeType: edgeType,
+				holes: JSON.stringify(holesList),
+			}, function(data,status){
+				console.log(status);
+				$("#save-success").removeClass("d-none");
+		        setTimeout(function(){ $("#save-success").addClass("d-none"); }, 3000);
+			});
+		}
+
+	});
+} catch(e) {
+
+}
+
+// Export to file
+document.getElementById("export").addEventListener('click', function() {
+	console.log("export");
+});

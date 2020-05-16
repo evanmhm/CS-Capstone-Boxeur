@@ -133,6 +133,45 @@ nav {
     margin-left: -1%;
 }
 
+.btnDelete {
+    align-items: center;
+    background: none;
+    height: 40px;
+    padding: 0;
+    letter-spacing: .25px;
+    cursor: pointer;
+    border: 0px;
+    margin-left: 70px;
+}
+
+.card-col {
+    margin-top: 40px;
+}
+
+.card-hr {
+    width: 90%;
+    margin: 0;
+}
+
+.specs-list {
+    list-style: none;
+    padding-left: 15px;
+}
+
+.cont-btn {
+    color: white !important;
+}
+
+#library-row {
+    margin-top: -20px;
+}
+
+#library-title {
+    color: white;
+    margin-top: 15px;
+    text-align: center;
+}
+
 #main-card {
     /* width: 80%; */
     margin-top: 50px;

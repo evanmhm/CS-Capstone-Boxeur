@@ -8,7 +8,8 @@ require_once 'vendor/autoload.php';
 // Set config params to acces Google API
 $client_id = '173728842922-gdj34rkacnhnjtk0lir9nno2kbflvbt1.apps.googleusercontent.com';
 $client_secret = 'CBwmgkt7xF5Wr9vh_oIo39AW';
-$redirect_uri = 'http://web.engr.oregonstate.edu/~hopperme/boxeur/index.php';
+$user = explode('/',$_SERVER['REQUEST_URI'])[1] . '/'. explode('/',$_SERVER['REQUEST_URI'])[2];
+$redirect_uri = "http://web.engr.oregonstate.edu/$user/index.php";
 
 //Create and Request to access Google API
 $client = new Google_Client();
@@ -40,7 +41,7 @@ if ($client->getAccessToken()) {
         $userData = $objRes->userinfo->get();
         $_SESSION['access_token'] = $client->getAccessToken();
         $_SESSION['userData'] = $userData;
-        
+
         // if there is user data from google
         if (!empty($userData)) {
             $servername = "oniddb.cws.oregonstate.edu";

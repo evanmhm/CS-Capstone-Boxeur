@@ -1,4 +1,7 @@
+var unit = "in"
+var projectName = ""
 var clickProjcet = document.getElementById("project");
+
 console.log(clickProjcet);
 if (clickProjcet) {
 	clickProjcet.addEventListener('click', function() {
@@ -138,21 +141,25 @@ $("#holes-options form").on("input", function() {
 // Units
 $("#project-options form").on("input", function() {
 	if (document.getElementById('inches').checked) {
+		unit = "in"
 		$('.unit').each(function(index, obj) {
 			$(this).text("in");
 			$(this).css("margin-left", "-22px");
 		});
 	} else if (document.getElementById('milimeters').checked) {
+		unit = "mm"
 		$('.unit').each(function(index, obj) {
 			$(this).text("mm");
 			$(this).css("margin-left", "-35px");
 		});
 	} else if (document.getElementById('centimeters').checked) {
+		unit = "cm"
 		$('.unit').each(function(index, obj) {
 			$(this).text("cm");
 			$(this).css("margin-left", "-29px");
 		});
 	}
+	projectName = $("#project-options input").val();
 });
 
 // HWD sliders
@@ -232,4 +239,6 @@ $(function() {
 			updateDimensions(event);
 		}
 	});
+
+	checkLoad();
 });
