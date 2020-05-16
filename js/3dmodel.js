@@ -10,11 +10,14 @@ var meshList = [];
 var outlineList = [];
 var edgeType = 0;
 var _face = 0;
+var faceColors = [];
 
 var holesList = []; //Hole list for saving the box
 
 var lastWidth = 50, lastDepth = 50, lastHeight = 50; // !!!!!!  USE THESE FOR SAVING THE BOX SIZE !!!!!!!!!!!//
 var boxWidth = 50, boxHeight = 50, boxDepth = 50;
+
+var holewidth = 5, holeheight = 5;
 
 var thickness = 5;
 
@@ -63,6 +66,12 @@ function init() {
 
 	/***** All "outlineList" related code is a NYI feature. Breaks the model view if uncommented. *****/
 
+	faceColors[0] = 0xff0000; //Front
+	faceColors[1] = 0x008000; //Right
+	faceColors[2] = 0x0000ff; //Back
+	faceColors[3] = 0xffff00; //Left
+	faceColors[4] = 0x800080; //Top
+	faceColors[5] = 0xff5733; //Bottom
 
 	for(var i=0; i<6; i++){
 		scene.add(meshList[0][i]);
@@ -71,7 +80,7 @@ function init() {
 
 	//holeGeometry = new THREE.BoxGeometry(5, 5, 15);
 	holeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
-	holeGeometry = new THREE.BoxGeometry(5, thickness+.5, 5);
+	holeGeometry = new THREE.BoxGeometry(5, thickness*2, 5);
 	holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 	scene.add(holeMesh);
 
@@ -126,7 +135,7 @@ function render(){
 
 			var fixed = intersects[0].point;
 			
-			holeMesh.position.copy( fixed  );
+			holeMesh.position.copy( fixed );
 			holeMesh.visible = true;
 
 		} else {
@@ -177,16 +186,18 @@ function holeType(event){
 
 	switch(event.target.id){
 		case "rect":
-			holeGeometry = new THREE.BoxGeometry(5, thickness+.5, 5);
+			holeGeometry = new THREE.BoxGeometry(holewidth, thickness*2, holeheight);
 			holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 			scene.add(holeMesh);
 			break;
 		case "triangle":
 			break;
 		case "circle":
-			holeGeometry = new THREE.CylinderGeometry(2.5, 2.5, thickness+2.5, 100);
+			holeGeometry = new THREE.CylinderGeometry(holewidth, holewidth, thickness*2, 30);
 			holeMesh = new THREE.Mesh(holeGeometry, holeMaterial);
 			scene.add(holeMesh);
+			break;
+		default:
 			break;
 	}
 
@@ -209,15 +220,6 @@ function holeType(event){
 	}
 
 }
-
-//Functions for adjusting hole dimensions
-function holeHeight(){
-
-}
-function holeWidth(){
-
-}
-
 
 //Change box geometry based on form values when a slider is being input or if a value is entered into the form.
 //Really need to think of a more elegant way to do each face other than a switch.
@@ -380,12 +382,12 @@ function helper(){
 
 			var intpoint = intersects[0].point;
 
-			//scene.add(testHole);
-			holeMesh.translateX(intpoint.x);
+			/***** These lines will move the hole to a desired position, just change intpoint to a (new THREE.Vector3(x, y, z)) with the desired coordinates *****/
+			/*holeMesh.translateX(intpoint.x);
 			holeMesh.translateY(intpoint.y);
-			holeMesh.translateZ(intpoint.z);
+			holeMesh.translateZ(intpoint.z);*/
 
-			var newmat = new THREE.MeshBasicMaterial({ color: 0xff0000, vertexColors: THREE.FaceColors });
+			var newmat = new THREE.MeshBasicMaterial({ color: faceColors[_face], vertexColors: THREE.FaceColors });
 			subtract = threecsg.subtract(meshList[edgeType][_face], holeMesh, newmat);
 			scene.remove(meshList[edgeType][_face]);
 			//scene.remove(outlineList[_face]);
@@ -422,6 +424,9 @@ function setListeners(){
 	document.getElementById("slider-width").addEventListener('input', updateDimensions, false);
 	document.getElementById("slider-height").addEventListener('input', updateDimensions, false);
 	document.getElementById("slider-depth").addEventListener('input', updateDimensions,false);
+	document.getElementById("width-value").addEventListener('input', updateDimensions, false);
+	document.getElementById("height-value").addEventListener('input', updateDimensions, false);
+	document.getElementById("depth-value").addEventListener('input', updateDimensions,false);
 
 	//Set listeners for edge types
 	document.getElementById("flat").addEventListener('click', edgeTypeHandler, false);
@@ -432,8 +437,12 @@ function setListeners(){
 	document.getElementById("rect").addEventListener('click', holeType, false);
 	document.getElementById("triangle").addEventListener('click', holeType, false);
 	document.getElementById("circle").addEventListener('click', holeType, false);
-	document.getElementById("shape-width-label").addEventListener('change', holeWidth, false);
-	document.getElementById("shape-height-label").addEventListener('change', holeHeight, false);
+	document.getElementById("hole-width").addEventListener('input', function(){
+		holewidth = document.getElementById("hole-width").value;
+	}, false);
+	document.getElementById("hole-height").addEventListener('input', function(){
+		holeheight = document.getElementById("hole-height").value;
+	}, false);
 
 	//Set listeners for what side to look at during hole placement
 	document.getElementById("front").addEventListener('click', function(e){holePlacement(e, 0, 0, 51)}, false);

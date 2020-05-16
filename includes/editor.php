@@ -133,11 +133,11 @@
                     <div id="holes-rect">
                         <div class="form-group">
                             <label for="name" id="shape-width-label">Rectangle width</label>
-                            <input class="form-control" type="number" min="0" name="shape-width" aria-describedby="shape-width" placeholder="Width">
+                            <input id="hole-width" class="form-control" type="number" min="0" name="shape-width" aria-describedby="shape-width" placeholder="Width">
                         </div>
                         <div class="form-group" id="shape-height-group">
                             <label for="name" id="shape-height-label">Rectangle height</label>
-                            <input class="form-control" type="number" min="0" name="shape-height" aria-describedby="shape-height" placeholder="Height">
+                            <input id="hole-height" class="form-control" type="number" min="0" name="shape-height" aria-describedby="shape-height" placeholder="Height">
                         </div>
                     </div>
 
