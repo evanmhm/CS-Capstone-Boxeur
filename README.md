@@ -16,7 +16,7 @@ On the first install you will most likely need to run `./permissions.bash` which
 If you would like to run the project on your local machine (which is untested), the OSU server uses PHP version 7.2.28 and [this page](https://www.w3schools.com/php/php_install.asp) has a tutorial on php and links to resources to install the necessary components.
 
 # Senior Software Development Documents
-[Final Report](/docs/Final_Report.pdf)
+[Final Report](/docs/Final_Report__Archive.pdf)
 
 [Problem Statement](/docs/Problem_statement.pdf)
 
